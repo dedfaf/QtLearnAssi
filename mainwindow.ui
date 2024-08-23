@@ -95,9 +95,40 @@
      <item>
       <layout class="QVBoxLayout" name="vLayout_func">
        <item>
-        <widget class="QStackedWidget" name="stackedWidget">
-         <widget class="QWidget" name="page"/>
-         <widget class="QWidget" name="page_2"/>
+        <widget class="QStackedWidget" name="stackedWidget_func">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <widget class="QWidget" name="music">
+          <widget class="QLabel" name="label">
+           <property name="geometry">
+            <rect>
+             <x>710</x>
+             <y>440</y>
+             <width>54</width>
+             <height>12</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="video">
+          <widget class="QLabel" name="label_2">
+           <property name="geometry">
+            <rect>
+             <x>510</x>
+             <y>440</y>
+             <width>81</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>TextLabel2</string>
+           </property>
+          </widget>
+         </widget>
         </widget>
        </item>
       </layout>
