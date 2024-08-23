@@ -7,6 +7,7 @@
 #include <QSlider>
 #include <QLabel>
 #include <QPushButton>
+#include <QListWidget>
 
 class func_Music : public QWidget
 {
@@ -24,6 +25,8 @@ private slots:
     void updateSeekBar();
     void loadLyrics(const QString &lyricPath);
     void updateLyric();
+    void on_selectMusicButton_clicked();  // 新增槽函数
+    void loadMusicFiles();  // 新增方法
 
 private:
     QMediaPlayer *mediaPlayer;
@@ -38,6 +41,7 @@ private:
     QPushButton *nextButton;
     QPushButton *downloadButton;
     QPushButton *musicSelectionButton;
+    QListWidget *musicListWidget;  // 新增列表部件
     QList<QPair<qint64, QString>> lyrics;
     int currentLyricIndex;
 };

@@ -7,6 +7,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegularExpression>
+#include <QDirIterator>
+#include <QFileInfo>
+#include <QMessageBox>
+#include <QListWidget>
 
 func_Music::func_Music(QWidget *parent)
     : QWidget(parent),
@@ -28,6 +32,7 @@ func_Music::func_Music(QWidget *parent)
     nextButton = new QPushButton("Next", this);
     downloadButton = new QPushButton("Download Song", this);
     musicSelectionButton = new QPushButton("Select Music", this);
+    musicListWidget = new QListWidget(this);  // 添加列表部件
 
     // 设置布局
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -45,6 +50,7 @@ func_Music::func_Music(QWidget *parent)
     mainLayout->addWidget(lyricLabel);
     mainLayout->addWidget(downloadButton);
     mainLayout->addWidget(musicSelectionButton);
+    mainLayout->addWidget(musicListWidget);  // 添加音乐列表部件
 
     setLayout(mainLayout);
 
@@ -55,6 +61,7 @@ func_Music::func_Music(QWidget *parent)
     connect(downloadButton, &QPushButton::clicked, []() {
         QDesktopServices::openUrl(QUrl("https://www.baidu.com"));
     });
+    connect(musicSelectionButton, &QPushButton::clicked, this, &func_Music::on_selectMusicButton_clicked);
 
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &func_Music::updateSeekBar);
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
@@ -145,4 +152,48 @@ void func_Music::updateLyric()
     if (currentLyricIndex < lyrics.size()) {
         lyricLabel->setText(lyrics[currentLyricIndex].second);
     }
+}
+
+void func_Music::on_selectMusicButton_clicked()
+{
+    loadMusicFiles();
+}
+
+void func_Music::loadMusicFiles()
+{
+    QStringList filters;
+    filters << "*.mp3";
+
+    QDirIterator it(QDir::homePath(), filters, QDir::Files, QDirIterator::Subdirectories);
+    QStringList musicFiles;
+
+    while (it.hasNext()) {
+        it.next();
+        QFileInfo fileInfo(it.filePath());
+        musicFiles << fileInfo.fileName();
+    }
+
+    if (musicFiles.isEmpty()) {
+        QMessageBox::information(this, "No Music Files", "No MP3 files found.");
+        return;
+    }
+
+    musicListWidget->clear();
+    musicListWidget->addItems(musicFiles);
+
+    // 处理列表项点击事件
+    connect(musicListWidget, &QListWidget::itemClicked, [this](QListWidgetItem *item) {
+        QString fileName = item->text();
+        QString filePath = QDir::homePath() + QDir::separator() + fileName;
+        QFileInfo fileInfo(filePath);
+        if (fileInfo.exists() && fileInfo.isFile()) {
+            QMediaContent mediaContent(QUrl::fromLocalFile(filePath));
+            playlist->clear();
+            playlist->addMedia(mediaContent);
+            playlist->setCurrentIndex(0);
+            mediaPlayer->play();
+            playPauseButton->setText("Pause");
+            updateSongInfo();
+        }
+    });
 }
