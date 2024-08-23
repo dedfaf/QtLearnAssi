@@ -97,7 +97,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget_func">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="music">
           <widget class="QLabel" name="label">
@@ -111,6 +111,16 @@
            </property>
            <property name="text">
             <string>TextLabel</string>
+           </property>
+          </widget>
+          <widget class="func_Music" name="widget" native="true">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>471</width>
+             <height>321</height>
+            </rect>
            </property>
           </widget>
          </widget>
@@ -148,6 +158,14 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>func_Music</class>
+   <extends>QWidget</extends>
+   <header location="global">func_music.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
