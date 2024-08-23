@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-// 前向声明 func_Music 类
 class func_Music;
 
 QT_BEGIN_NAMESPACE
@@ -24,7 +23,7 @@ public slots:
     void on_pushButton_image_clicked();
     void on_pushButton_weather_clicked();
     void on_pushButton_map_clicked();
-    void on_pushButton_im_clicked();
+    void on_pushButton_IM_clicked();
     void on_pushButton_browser_clicked();
 
 private:

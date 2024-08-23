@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "func_music.h"
@@ -8,12 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 创建 func_Music 实例并添加到 stackedWidget_func 中
-    func_Music *musicWidget = new func_Music(this);
-    ui->stackedWidget_func->addWidget(musicWidget);
+    // Default Stack
+    ui->stackedWidget_func->setCurrentIndex(-1);
 
-    // 设置默认显示的页面（可根据需求设置）
-    ui->stackedWidget_func->setCurrentIndex(0);
+    qInfo() << ui->stackedWidget_func->currentIndex();
 }
 
 MainWindow::~MainWindow()
@@ -23,35 +22,35 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_music_clicked()
 {
-    ui->stackedWidget_func->setCurrentIndex(0);  // 显示音乐页面
+    ui->stackedWidget_func->setCurrentIndex(0);  // Music Stack
 }
 
 void MainWindow::on_pushButton_video_clicked()
 {
-    ui->stackedWidget_func->setCurrentIndex(1);  // 显示视频页面
+    ui->stackedWidget_func->setCurrentIndex(1);  // Video Stack
 }
 
 void MainWindow::on_pushButton_image_clicked()
 {
-    // TODO: 实现图像页面切换
+    ui->stackedWidget_func->setCurrentIndex(2); // Image Stack
 }
 
 void MainWindow::on_pushButton_weather_clicked()
 {
-    // TODO: 实现天气页面切换
+    // TODO: // Weather Stack
 }
 
 void MainWindow::on_pushButton_map_clicked()
 {
-    // TODO: 实现地图页面切换
+    // TODO: // Map Stack
 }
 
-void MainWindow::on_pushButton_im_clicked()
+void MainWindow::on_pushButton_IM_clicked()
 {
-    // TODO: 实现即时消息页面切换
+    // TODO: // IM Stack
 }
 
 void MainWindow::on_pushButton_browser_clicked()
 {
-    // TODO: 实现浏览器页面切换
+    // TODO: // Browser Stack
 }
