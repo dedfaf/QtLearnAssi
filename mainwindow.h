@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+// 前向声明 func_Music 类
+class func_Music;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -27,4 +30,5 @@ public slots:
 private:
     Ui::MainWindow *ui;
 };
+
 #endif // MAINWINDOW_H

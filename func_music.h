@@ -2,10 +2,11 @@
 #define FUNC_MUSIC_H
 
 #include <QWidget>
-
-namespace Ui {
-class func_Music;
-}
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
+#include <QSlider>
+#include <QLabel>
+#include <QPushButton>
 
 class func_Music : public QWidget
 {
@@ -15,8 +16,30 @@ public:
     explicit func_Music(QWidget *parent = nullptr);
     ~func_Music();
 
+private slots:
+    void togglePlayPause();
+    void playPreviousSong();
+    void playNextSong();
+    void updateSongInfo();
+    void updateSeekBar();
+    void loadLyrics(const QString &lyricPath);
+    void updateLyric();
+
 private:
-    Ui::func_Music *ui;
+    QMediaPlayer *mediaPlayer;
+    QMediaPlaylist *playlist;
+    QSlider *seekBar;
+    QLabel *musicImageView;
+    QLabel *songTitleLabel;
+    QLabel *artistLabel;
+    QLabel *lyricLabel;
+    QPushButton *playPauseButton;
+    QPushButton *prevButton;
+    QPushButton *nextButton;
+    QPushButton *downloadButton;
+    QPushButton *musicSelectionButton;
+    QList<QPair<qint64, QString>> lyrics;
+    int currentLyricIndex;
 };
 
 #endif // FUNC_MUSIC_H
