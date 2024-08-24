@@ -48,6 +48,7 @@ private:
     QListWidget *musicListWidget;
 
     enum PlayMode {
+        Sequential,
         Loop,
         SingleLoop,
         Random
