@@ -1,12 +1,18 @@
+#include <QDebug>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "func_music.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-//    ui->stackedWidget_func->setCurrentIndex(0);
+
+    // Default Stack
+    ui->stackedWidget_func->setCurrentIndex(-1);
+
+    qInfo() << ui->stackedWidget_func->currentIndex();
 }
 
 MainWindow::~MainWindow()
@@ -16,35 +22,35 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_music_clicked()
 {
-    ui->stackedWidget_func->setCurrentIndex(0);
+    ui->stackedWidget_func->setCurrentIndex(0);  // Music Stack
 }
 
 void MainWindow::on_pushButton_video_clicked()
 {
-    ui->stackedWidget_func->setCurrentIndex(1);
+    ui->stackedWidget_func->setCurrentIndex(1);  // Video Stack
 }
 
 void MainWindow::on_pushButton_image_clicked()
 {
-//    ui->stackedWidget->
+    ui->stackedWidget_func->setCurrentIndex(2); // Image Stack
 }
 
 void MainWindow::on_pushButton_weather_clicked()
 {
-//    ui->stackedWidget->
+    // TODO: // Weather Stack
 }
 
 void MainWindow::on_pushButton_map_clicked()
 {
-//    ui->stackedWidget->
+    // TODO: // Map Stack
 }
 
-void MainWindow::on_pushButton_im_clicked()
+void MainWindow::on_pushButton_IM_clicked()
 {
-//    ui->stackedWidget->
+    // TODO: // IM Stack
 }
 
 void MainWindow::on_pushButton_browser_clicked()
 {
-//    ui->stackedWidget->
+    // TODO: // Browser Stack
 }

@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class func_Music;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -21,10 +23,11 @@ public slots:
     void on_pushButton_image_clicked();
     void on_pushButton_weather_clicked();
     void on_pushButton_map_clicked();
-    void on_pushButton_im_clicked();
+    void on_pushButton_IM_clicked();
     void on_pushButton_browser_clicked();
 
 private:
     Ui::MainWindow *ui;
 };
+
 #endif // MAINWINDOW_H
