@@ -10,13 +10,13 @@
 #include <QDirIterator>
 #include <QFileInfo>
 #include <QMessageBox>
-#include <QListWidget>
 
 func_Music::func_Music(QWidget *parent)
     : QWidget(parent),
       mediaPlayer(new QMediaPlayer(this)),
       playlist(new QMediaPlaylist(this)),
-      currentLyricIndex(0)
+      currentLyricIndex(0),
+      currentPlayMode(Loop) // 初始化播放模式
 {
     // 初始化 UI 组件
     mediaPlayer->setPlaylist(playlist);
@@ -32,7 +32,9 @@ func_Music::func_Music(QWidget *parent)
     nextButton = new QPushButton("Next", this);
     downloadButton = new QPushButton("Download Song", this);
     musicSelectionButton = new QPushButton("Select Music", this);
-    musicListWidget = new QListWidget(this);  // 添加列表部件
+    changePlayModeButton = new QPushButton("Play Mode: Loop", this); // 默认显示循环播放模式
+    viewPlaylistButton = new QPushButton("View Playlist", this); // 查看播放列表按钮
+    musicListWidget = new QListWidget(this);
 
     // 设置布局
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -50,7 +52,9 @@ func_Music::func_Music(QWidget *parent)
     mainLayout->addWidget(lyricLabel);
     mainLayout->addWidget(downloadButton);
     mainLayout->addWidget(musicSelectionButton);
-    mainLayout->addWidget(musicListWidget);  // 添加音乐列表部件
+    mainLayout->addWidget(changePlayModeButton); // 添加到布局
+    mainLayout->addWidget(viewPlaylistButton);  // 添加查看播放列表按钮到布局
+    mainLayout->addWidget(musicListWidget);
 
     setLayout(mainLayout);
 
@@ -62,6 +66,8 @@ func_Music::func_Music(QWidget *parent)
         QDesktopServices::openUrl(QUrl("https://www.baidu.com"));
     });
     connect(musicSelectionButton, &QPushButton::clicked, this, &func_Music::on_selectMusicButton_clicked);
+    connect(changePlayModeButton, &QPushButton::clicked, this, &func_Music::changePlayMode); // 连接播放模式切换按钮的信号
+    connect(viewPlaylistButton, &QPushButton::clicked, this, &func_Music::showPlaylist); // 连接查看播放列表按钮的信号
 
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &func_Music::updateSeekBar);
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
@@ -70,8 +76,6 @@ func_Music::func_Music(QWidget *parent)
 
     // 初始化播放列表为空
     playlist->setCurrentIndex(0);
-
-    // 不自动播放任何音乐
 }
 
 func_Music::~func_Music()
@@ -93,21 +97,30 @@ void func_Music::togglePlayPause()
 
 void func_Music::playPreviousSong()
 {
-    playlist->previous();
-    updateSongInfo();
+    if (playlist->mediaCount() > 0) {  // 确保播放列表中有歌曲
+        playlist->previous();  // 切换到上一首歌曲
+        mediaPlayer->play();  // 播放新设置的歌曲
+        updateSongInfo();
+    }
 }
 
 void func_Music::playNextSong()
 {
-    playlist->next();
-    updateSongInfo();
+    if (playlist->mediaCount() > 0) {  // 确保播放列表中有歌曲
+        playlist->next();  // 切换到下一首歌曲
+        mediaPlayer->play();  // 播放新设置的歌曲
+        updateSongInfo();
+    }
 }
 
 void func_Music::updateSongInfo()
 {
     // 更新歌曲信息
-    songTitleLabel->setText("Current Song Title");  // 可以根据实际情况更新
-    artistLabel->setText("Current Artist");
+    int currentIndex = playlist->currentIndex();
+    if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
+        QString currentSong = musicListWidget->item(currentIndex)->text();
+        songTitleLabel->setText(QFileInfo(currentSong).baseName());
+    }
 }
 
 void func_Music::updateSeekBar()
@@ -167,7 +180,7 @@ void func_Music::loadMusicFiles()
     // 在这里指定你的U盘路径
     QString usbPath;
 #ifdef Q_OS_WIN
-    usbPath = "F:/";  // 在Windows上指定U盘路径，例如E盘
+    usbPath = "F:/";  // 在Windows上指定U盘路径，例如F盘
 #elif defined(Q_OS_LINUX)
     usbPath = "/media/user/USB";  // 在Linux上指定U盘路径
 #else
@@ -191,6 +204,13 @@ void func_Music::loadMusicFiles()
     musicListWidget->clear();
     musicListWidget->addItems(musicFiles);
 
+    playlist->clear();  // 清空播放列表
+    foreach (const QString &musicFile, musicFiles) {
+        QMediaContent mediaContent(QUrl::fromLocalFile(musicFile));
+        playlist->addMedia(mediaContent);  // 将所有歌曲添加到播放列表
+    }
+    playlist->setCurrentIndex(0);  // 确保播放列表从第一首歌开始
+
     // 处理列表项点击事件
     connect(musicListWidget, &QListWidget::itemClicked, [this](QListWidgetItem *item) {
         QString filePath = item->text();
@@ -207,3 +227,50 @@ void func_Music::loadMusicFiles()
     });
 }
 
+void func_Music::changePlayMode()
+{
+    // 切换播放模式
+    switch (currentPlayMode) {
+    case Loop:
+        currentPlayMode = SingleLoop;
+        playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+        break;
+    case SingleLoop:
+        currentPlayMode = Random;
+        playlist->setPlaybackMode(QMediaPlaylist::Random);
+        break;
+    case Random:
+        currentPlayMode = Loop;
+        playlist->setPlaybackMode(QMediaPlaylist::Loop);
+        break;
+    }
+    // 更新按钮文本
+    updatePlayModeButtonText();
+}
+
+void func_Music::updatePlayModeButtonText()
+{
+    switch (currentPlayMode) {
+    case Loop:
+        changePlayModeButton->setText("Play Mode: Loop");
+        break;
+    case SingleLoop:
+        changePlayModeButton->setText("Play Mode: Single Loop");
+        break;
+    case Random:
+        changePlayModeButton->setText("Play Mode: Random");
+        break;
+    }
+}
+
+void func_Music::showPlaylist()
+{
+    // 显示播放列表的逻辑
+    if (musicListWidget->isVisible()) {
+        musicListWidget->hide();
+        viewPlaylistButton->setText("View Playlist");
+    } else {
+        musicListWidget->show();
+        viewPlaylistButton->setText("Hide Playlist");
+    }
+}

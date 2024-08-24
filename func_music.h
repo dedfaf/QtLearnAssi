@@ -4,9 +4,9 @@
 #include <QWidget>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
-#include <QSlider>
 #include <QLabel>
 #include <QPushButton>
+#include <QSlider>
 #include <QListWidget>
 
 class func_Music : public QWidget
@@ -21,29 +21,44 @@ private slots:
     void togglePlayPause();
     void playPreviousSong();
     void playNextSong();
-    void updateSongInfo();
+    void on_selectMusicButton_clicked();
+    void changePlayMode();
+    void updatePlayModeButtonText();
     void updateSeekBar();
     void loadLyrics(const QString &lyricPath);
     void updateLyric();
-    void on_selectMusicButton_clicked();  // 新增槽函数
-    void loadMusicFiles();  // 新增方法
+    void loadMusicFiles();
+    void showPlaylist();  // 添加 showPlaylist() 函数的声明
 
 private:
     QMediaPlayer *mediaPlayer;
     QMediaPlaylist *playlist;
-    QSlider *seekBar;
     QLabel *musicImageView;
     QLabel *songTitleLabel;
     QLabel *artistLabel;
+    QSlider *seekBar;
     QLabel *lyricLabel;
     QPushButton *playPauseButton;
     QPushButton *prevButton;
     QPushButton *nextButton;
     QPushButton *downloadButton;
     QPushButton *musicSelectionButton;
-    QListWidget *musicListWidget;  // 新增列表部件
-    QList<QPair<qint64, QString>> lyrics;
+    QPushButton *changePlayModeButton;  // 添加播放模式按钮
+    QPushButton *viewPlaylistButton;  // 添加查看播放列表按钮
+    QListWidget *musicListWidget;
+
+    enum PlayMode {
+        Loop,
+        SingleLoop,
+        Random
+    };
+
+    PlayMode currentPlayMode;  // 添加播放模式成员变量
+
+    QVector<QPair<qint64, QString>> lyrics;
     int currentLyricIndex;
+
+    void updateSongInfo();
 };
 
 #endif // FUNC_MUSIC_H
