@@ -95,6 +95,9 @@
      <item>
       <layout class="QVBoxLayout" name="vLayout_func">
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout"/>
+       </item>
+       <item>
         <widget class="QStackedWidget" name="stackedWidget_func">
          <property name="currentIndex">
           <number>0</number>
