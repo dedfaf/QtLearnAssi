@@ -18,15 +18,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     func_music.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    timedisplay.cpp
 
 HEADERS += \
     func_music.h \
-    mainwindow.h
+    mainwindow.h \
+    timedisplay.h
 
 FORMS += \
     func_music.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    timedisplay.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
