@@ -164,17 +164,27 @@ void func_Music::loadMusicFiles()
     QStringList filters;
     filters << "*.mp3";
 
-    QDirIterator it(QDir::homePath(), filters, QDir::Files, QDirIterator::Subdirectories);
+    // 在这里指定你的U盘路径
+    QString usbPath;
+#ifdef Q_OS_WIN
+    usbPath = "F:/";  // 在Windows上指定U盘路径，例如E盘
+#elif defined(Q_OS_LINUX)
+    usbPath = "/media/user/USB";  // 在Linux上指定U盘路径
+#else
+    usbPath = QDir::homePath();  // 默认路径
+#endif
+
+    QDirIterator it(usbPath, filters, QDir::Files, QDirIterator::Subdirectories);
     QStringList musicFiles;
 
     while (it.hasNext()) {
         it.next();
         QFileInfo fileInfo(it.filePath());
-        musicFiles << fileInfo.fileName();
+        musicFiles << fileInfo.absoluteFilePath();  // 使用绝对路径
     }
 
     if (musicFiles.isEmpty()) {
-        QMessageBox::information(this, "No Music Files", "No MP3 files found.");
+        QMessageBox::information(this, "No Music Files", "No MP3 files found on the USB drive.");
         return;
     }
 
@@ -183,8 +193,7 @@ void func_Music::loadMusicFiles()
 
     // 处理列表项点击事件
     connect(musicListWidget, &QListWidget::itemClicked, [this](QListWidgetItem *item) {
-        QString fileName = item->text();
-        QString filePath = QDir::homePath() + QDir::separator() + fileName;
+        QString filePath = item->text();
         QFileInfo fileInfo(filePath);
         if (fileInfo.exists() && fileInfo.isFile()) {
             QMediaContent mediaContent(QUrl::fromLocalFile(filePath));
@@ -197,3 +206,4 @@ void func_Music::loadMusicFiles()
         }
     });
 }
+
