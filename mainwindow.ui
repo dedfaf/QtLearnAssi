@@ -106,34 +106,21 @@
          <item>
           <widget class="QStackedWidget" name="stackedWidget_func">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
-           <widget class="QWidget" name="music">
-            <widget class="QLabel" name="label">
-             <property name="geometry">
-              <rect>
-               <x>710</x>
-               <y>440</y>
-               <width>54</width>
-               <height>12</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
+           <widget class="QWidget" name="page_music">
             <widget class="func_Music" name="widget" native="true">
              <property name="geometry">
               <rect>
                <x>10</x>
                <y>10</y>
-               <width>471</width>
-               <height>321</height>
+               <width>1000</width>
+               <height>540</height>
               </rect>
              </property>
             </widget>
            </widget>
-           <widget class="QWidget" name="video">
+           <widget class="QWidget" name="page_video">
             <widget class="QLabel" name="label_2">
              <property name="geometry">
               <rect>
