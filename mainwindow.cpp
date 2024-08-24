@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Default Stack
-    ui->stackedWidget_func->setCurrentIndex(-1);
+    ui->stackedWidget_func->setCurrentIndex(4);
 
     qInfo() << ui->stackedWidget_func->currentIndex();
 }
@@ -37,20 +37,20 @@ void MainWindow::on_pushButton_image_clicked()
 
 void MainWindow::on_pushButton_weather_clicked()
 {
-    // TODO: // Weather Stack
+    ui->stackedWidget_func->setCurrentIndex(3);// Weather Stack
 }
 
 void MainWindow::on_pushButton_map_clicked()
 {
-    // TODO: // Map Stack
+    ui->stackedWidget_func->setCurrentIndex(4);// Map Stack
 }
 
 void MainWindow::on_pushButton_IM_clicked()
 {
-    // TODO: // IM Stack
+    ui->stackedWidget_func->setCurrentIndex(5);// IM Stack
 }
 
 void MainWindow::on_pushButton_browser_clicked()
 {
-    // TODO: // Browser Stack
+    ui->stackedWidget_func->setCurrentIndex(6);// Browser Stack
 }
