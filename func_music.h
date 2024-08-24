@@ -28,7 +28,8 @@ private slots:
     void loadLyrics(const QString &lyricPath);
     void updateLyric();
     void loadMusicFiles();
-    void showPlaylist();  // 添加 showPlaylist() 函数的声明
+    void showPlaylist();
+    void shufflePlaylist();  // 在头文件中声明 shufflePlaylist 函数
 
 private:
     QMediaPlayer *mediaPlayer;
@@ -43,18 +44,17 @@ private:
     QPushButton *nextButton;
     QPushButton *downloadButton;
     QPushButton *musicSelectionButton;
-    QPushButton *changePlayModeButton;  // 添加播放模式按钮
-    QPushButton *viewPlaylistButton;  // 添加查看播放列表按钮
+    QPushButton *changePlayModeButton;
+    QPushButton *viewPlaylistButton;
     QListWidget *musicListWidget;
 
     enum PlayMode {
-        Sequential,
         Loop,
         SingleLoop,
         Random
     };
 
-    PlayMode currentPlayMode;  // 添加播放模式成员变量
+    PlayMode currentPlayMode;
 
     QVector<QPair<qint64, QString>> lyrics;
     int currentLyricIndex;

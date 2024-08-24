@@ -11,13 +11,15 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QListWidget>
+#include <QTime>
+#include <algorithm> // 添加这个头文件用于 std::random_shuffle
 
 func_Music::func_Music(QWidget *parent)
     : QWidget(parent),
       mediaPlayer(new QMediaPlayer(this)),
       playlist(new QMediaPlaylist(this)),
       currentLyricIndex(0),
-      currentPlayMode(Sequential)
+      currentPlayMode(Loop)  // 默认播放模式设置为 Loop
 {
     // 初始化 UI 组件
     mediaPlayer->setPlaylist(playlist);
@@ -33,7 +35,7 @@ func_Music::func_Music(QWidget *parent)
     nextButton = new QPushButton("Next", this);
     downloadButton = new QPushButton("Download Song", this);
     musicSelectionButton = new QPushButton("Select Music", this);
-    changePlayModeButton = new QPushButton("Play Mode: Sequential", this);
+    changePlayModeButton = new QPushButton("Play Mode: Loop", this);
     viewPlaylistButton = new QPushButton("View Playlist", this); // 新增查看播放列表按钮
     musicListWidget = new QListWidget(this);
 
@@ -64,7 +66,7 @@ func_Music::func_Music(QWidget *parent)
     connect(prevButton, &QPushButton::clicked, this, &func_Music::playPreviousSong);
     connect(nextButton, &QPushButton::clicked, this, &func_Music::playNextSong);
     connect(downloadButton, &QPushButton::clicked, []() {
-        QDesktopServices::openUrl(QUrl("https://www.baidu.com"));
+        QDesktopServices::openUrl(QUrl("https://music.163.com/"));
     });
     connect(musicSelectionButton, &QPushButton::clicked, this, &func_Music::on_selectMusicButton_clicked);
     connect(changePlayModeButton, &QPushButton::clicked, this, &func_Music::changePlayMode);
@@ -221,10 +223,6 @@ void func_Music::loadMusicFiles()
 void func_Music::changePlayMode()
 {
     switch (currentPlayMode) {
-    case Sequential:
-        currentPlayMode = Loop;
-        playlist->setPlaybackMode(QMediaPlaylist::Loop);
-        break;
     case Loop:
         currentPlayMode = SingleLoop;
         playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
@@ -232,21 +230,40 @@ void func_Music::changePlayMode()
     case SingleLoop:
         currentPlayMode = Random;
         playlist->setPlaybackMode(QMediaPlaylist::Random);
+        shufflePlaylist();  // 当模式切换到 Random 时调用随机化函数
         break;
     case Random:
-        currentPlayMode = Sequential;
-        playlist->setPlaybackMode(QMediaPlaylist::Sequential);
+        currentPlayMode = Loop;
+        playlist->setPlaybackMode(QMediaPlaylist::Loop);
         break;
     }
     updatePlayModeButtonText();
 }
 
+void func_Music::shufflePlaylist()
+{
+    QList<QMediaContent> mediaList;
+    int mediaCount = playlist->mediaCount();
+
+    for (int i = 0; i < mediaCount; ++i) {
+        mediaList.append(playlist->media(i));
+    }
+
+    // 使用时间种子初始化随机数生成器
+    qsrand(QTime::currentTime().msec());
+
+    // 打乱列表顺序
+    std::random_shuffle(mediaList.begin(), mediaList.end());
+
+    playlist->clear();
+    foreach (const QMediaContent &mediaContent, mediaList) {
+        playlist->addMedia(mediaContent);
+    }
+}
+
 void func_Music::updatePlayModeButtonText()
 {
     switch (currentPlayMode) {
-    case Sequential:
-        changePlayModeButton->setText("Play Mode: Sequential");
-        break;
     case Loop:
         changePlayModeButton->setText("Play Mode: Loop");
         break;
