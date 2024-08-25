@@ -1,6 +1,7 @@
 QT += core gui multimedia
 QT += core gui widgets
 QT += multimedia multimediawidgets
+QT += quickwidgets
 QT += location
 
 
@@ -43,3 +44,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    Map.qml

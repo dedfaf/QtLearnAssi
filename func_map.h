@@ -2,7 +2,6 @@
 #define FUNC_MAP_H
 
 #include <QWidget>
-#include <QtLocation/QGeoRoute>
 
 namespace Ui {
 class func_map;

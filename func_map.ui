@@ -24,15 +24,27 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Map Widget</string>
+     <widget class="QQuickWidget" name="quickWidget_mainMap">
+      <property name="resizeMode">
+       <enum>QQuickWidget::SizeRootObjectToView</enum>
+      </property>
+      <property name="source">
+       <url>
+        <string>file:///D:/Daily/%232024/Qt-learn/Programs/QtLearnAssi/Map.qml</string>
+       </url>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
