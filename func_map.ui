@@ -30,7 +30,7 @@
       </property>
       <property name="source">
        <url>
-        <string>file:///D:/Daily/%232024/Qt-learn/Programs/QtLearnAssi/Map.qml</string>
+        <string>qrc:/qml/Map.qml</string>
        </url>
       </property>
      </widget>
