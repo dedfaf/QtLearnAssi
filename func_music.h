@@ -30,6 +30,7 @@ private slots:
     void loadMusicFiles();
     void showPlaylist();
     void shufflePlaylist();  // 在头文件中声明 shufflePlaylist 函数
+    void onMediaStatusChanged(QMediaPlayer::MediaStatus status); // 新增槽函数
 
 private:
     QMediaPlayer *mediaPlayer;
@@ -60,6 +61,7 @@ private:
     int currentLyricIndex;
 
     void updateSongInfo();
+    void handleRandomPlayback();  // 新函数处理随机播放
 };
 
 #endif // FUNC_MUSIC_H

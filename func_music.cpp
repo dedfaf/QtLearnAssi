@@ -12,7 +12,7 @@
 #include <QMessageBox>
 #include <QListWidget>
 #include <QTime>
-#include <algorithm> // 添加这个头文件用于 std::random_shuffle
+#include <algorithm> // 用于 std::random_shuffle
 
 func_Music::func_Music(QWidget *parent)
     : QWidget(parent),
@@ -76,6 +76,7 @@ func_Music::func_Music(QWidget *parent)
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
         seekBar->setMaximum(duration);
     });
+    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &func_Music::onMediaStatusChanged); // 连接媒体状态变化信号
 
     // 初始化播放列表为空
     playlist->setCurrentIndex(0);
@@ -100,7 +101,17 @@ void func_Music::togglePlayPause()
 
 void func_Music::playPreviousSong()
 {
-    if (playlist->mediaCount() > 0) {
+    if (currentPlayMode == SingleLoop) {
+        // 在 SingleLoop 模式下，上一首按钮不影响播放模式，但可以跳转到列表的上一首
+        int currentIndex = playlist->currentIndex();
+        if (currentIndex > 0) {
+            playlist->setCurrentIndex(currentIndex - 1);
+        } else {
+            playlist->setCurrentIndex(playlist->mediaCount() - 1);
+        }
+        mediaPlayer->play();
+        updateSongInfo();
+    } else if (playlist->mediaCount() > 0) {
         playlist->previous();
         mediaPlayer->play();
         updateSongInfo();
@@ -109,7 +120,17 @@ void func_Music::playPreviousSong()
 
 void func_Music::playNextSong()
 {
-    if (playlist->mediaCount() > 0) {
+    if (currentPlayMode == SingleLoop) {
+        // 在 SingleLoop 模式下，下一首按钮不影响播放模式，但可以跳转到列表的下一首
+        int currentIndex = playlist->currentIndex();
+        if (currentIndex < playlist->mediaCount() - 1) {
+            playlist->setCurrentIndex(currentIndex + 1);
+        } else {
+            playlist->setCurrentIndex(0);
+        }
+        mediaPlayer->play();
+        updateSongInfo();
+    } else if (playlist->mediaCount() > 0) {
         playlist->next();
         mediaPlayer->play();
         updateSongInfo();
@@ -211,7 +232,7 @@ void func_Music::loadMusicFiles()
     }
     playlist->setCurrentIndex(0);  // 确保播放列表从第一首歌开始
 
-    connect(musicListWidget, &QListWidget::itemClicked, [this](QListWidgetItem *item) {
+    connect(musicListWidget, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
         int index = musicListWidget->row(item);
         playlist->setCurrentIndex(index);
         mediaPlayer->play();
@@ -229,8 +250,8 @@ void func_Music::changePlayMode()
         break;
     case SingleLoop:
         currentPlayMode = Random;
-        playlist->setPlaybackMode(QMediaPlaylist::Random);
-        shufflePlaylist();  // 当模式切换到 Random 时调用随机化函数
+        playlist->setPlaybackMode(QMediaPlaylist::Sequential);  // 在 Random 模式下，播放模式仍设为 Sequential
+        // 不立即打乱播放列表，而是在当前歌曲播放完毕后再处理
         break;
     case Random:
         currentPlayMode = Loop;
@@ -286,4 +307,16 @@ void func_Music::showPlaylist()
 
     // 弹出消息框显示播放列表
     QMessageBox::information(this, "Playlist", "Current Playlist:\n" + playlistItems.join("\n"));
+}
+
+void func_Music::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
+{
+    if (status == QMediaPlayer::EndOfMedia) {
+        if (currentPlayMode == SingleLoop) {
+            mediaPlayer->play();  // 在 SingleLoop 模式下，自动重播当前歌曲
+        } else if (currentPlayMode == Random) {
+            shufflePlaylist();  // 在 Random 模式下，重新打乱播放列表
+            playNextSong();  // 播放下一首歌曲
+        }
+    }
 }
