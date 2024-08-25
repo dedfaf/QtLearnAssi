@@ -191,7 +191,21 @@ void func_Music::updateLyric()
 
 void func_Music::on_selectMusicButton_clicked()
 {
+    // 加载音乐文件
     loadMusicFiles();
+
+    // 获取扫描到的歌曲列表
+    QStringList musicFiles;
+    for (int i = 0; i < musicListWidget->count(); ++i) {
+        musicFiles << musicListWidget->item(i)->text();
+    }
+
+    // 显示弹窗
+    if (!musicFiles.isEmpty()) {
+        QMessageBox::information(this, "Scanned Songs", "Scanned Songs:\n" + musicFiles.join("\n"));
+    } else {
+        QMessageBox::information(this, "No Music Files", "No MP3 files found on the USB drive.");
+    }
 }
 
 void func_Music::loadMusicFiles()
@@ -299,14 +313,14 @@ void func_Music::updatePlayModeButtonText()
 
 void func_Music::showPlaylist()
 {
+    musicListWidget->clear();  // 清空当前列表
     QStringList playlistItems;
     for (int i = 0; i < playlist->mediaCount(); ++i) {
         QUrl mediaUrl = playlist->media(i).canonicalUrl();
         playlistItems << mediaUrl.toLocalFile();  // 将文件路径添加到列表中
     }
 
-    // 弹出消息框显示播放列表
-    QMessageBox::information(this, "Playlist", "Current Playlist:\n" + playlistItems.join("\n"));
+    musicListWidget->addItems(playlistItems);  // 将播放列表显示在列表控件中
 }
 
 void func_Music::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
