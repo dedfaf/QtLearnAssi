@@ -106,7 +106,7 @@
          <item>
           <widget class="QStackedWidget" name="stackedWidget_func">
            <property name="currentIndex">
-            <number>2</number>
+            <number>4</number>
            </property>
            <widget class="QWidget" name="page_music">
             <widget class="func_Music" name="widget" native="true">
@@ -165,7 +165,7 @@
              </property>
             </widget>
            </widget>
-           <widget class="QWidget" name="page_map">
+           <widget class="func_map" name="page_map">
             <widget class="QLabel" name="label_4">
              <property name="geometry">
               <rect>
@@ -242,6 +242,12 @@
    <class>timeDisplay</class>
    <extends>QWidget</extends>
    <header location="global">timedisplay.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>func_map</class>
+   <extends>QWidget</extends>
+   <header location="global">func_map.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
