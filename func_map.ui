@@ -28,23 +28,48 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_MapSelect">
           <property name="text">
            <string>Map Select</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox">
+         <widget class="QComboBox" name="comboBox_mapTypeSelection">
           <property name="editable">
            <bool>false</bool>
           </property>
           <property name="currentText">
-           <string/>
+           <string>1</string>
           </property>
           <property name="currentIndex">
-           <number>-1</number>
+           <number>0</number>
           </property>
+          <item>
+           <property name="text">
+            <string>1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
