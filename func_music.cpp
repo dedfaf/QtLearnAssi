@@ -148,9 +148,13 @@ void func_Music::updateSongInfo()
     int currentIndex = playlist->currentIndex();
     if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
         QString currentSong = musicListWidget->item(currentIndex)->text();
+        qDebug() << "Updating song info: Index" << currentIndex << ", Song:" << currentSong;
         songTitleLabel->setText(QFileInfo(currentSong).baseName());
+    } else {
+        qDebug() << "Current index out of range:" << currentIndex;
     }
 }
+
 
 void func_Music::updateSeekBar()
 {
@@ -363,4 +367,7 @@ void func_Music::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
             playNextSong();  // 播放下一首歌曲
         }
     }
+    // 更新歌曲信息
+    updateSongInfo();
 }
+
