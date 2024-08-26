@@ -4,8 +4,8 @@ import QtLocation 5.12
 import QtPositioning 5.12
 
 Item {
-    width: 1024
-    height: 512
+    width: 800
+    height: 500
     visible: true
 
     Flickable {
