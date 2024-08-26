@@ -19,7 +19,7 @@ Item {
                 PluginParameter { name: "osm.mapping.providersrepository.address"; value: "http://123.57.89.45/dedfaf_posts/qt-osm-map-providers" }
                 PluginParameter { name: "osm.mapping.highdpi_tiles"; value: false }
             }
-            activeMapType: supportedMapTypes[0] // Cycle map provided by Thunderforest
+            activeMapType: supportedMapTypes[1] // Cycle map provided by Thunderforest
             center: QtPositioning.coordinate(39.731266726835074, 116.17126161716882)
             zoomLevel: 14
         }
