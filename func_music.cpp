@@ -37,6 +37,8 @@ func_Music::func_Music(QWidget *parent)
     musicSelectionButton = new QPushButton("Select Music", this);
     changePlayModeButton = new QPushButton("Play Mode: Loop", this);
     viewPlaylistButton = new QPushButton("View Playlist", this); // 新增查看播放列表按钮
+    addToFavoritesButton = new QPushButton("Add to Favorites", this); // 新增添加到收藏夹按钮
+    viewFavoritesButton = new QPushButton("View Favorites", this); // 新增查看收藏夹按钮
     musicListWidget = new QListWidget(this);
 
     // 设置布局
@@ -57,6 +59,8 @@ func_Music::func_Music(QWidget *parent)
     mainLayout->addWidget(musicSelectionButton);
     mainLayout->addWidget(changePlayModeButton);
     mainLayout->addWidget(viewPlaylistButton);  // 添加查看播放列表按钮到布局
+    mainLayout->addWidget(addToFavoritesButton); // 添加到收藏夹按钮到布局
+    mainLayout->addWidget(viewFavoritesButton);  // 添加查看收藏夹按钮到布局
     mainLayout->addWidget(musicListWidget);
 
     setLayout(mainLayout);
@@ -71,6 +75,8 @@ func_Music::func_Music(QWidget *parent)
     connect(musicSelectionButton, &QPushButton::clicked, this, &func_Music::on_selectMusicButton_clicked);
     connect(changePlayModeButton, &QPushButton::clicked, this, &func_Music::changePlayMode);
     connect(viewPlaylistButton, &QPushButton::clicked, this, &func_Music::showPlaylist);  // 连接查看播放列表按钮的信号槽
+    connect(addToFavoritesButton, &QPushButton::clicked, this, &func_Music::addToFavorites); // 连接添加到收藏夹按钮的信号槽
+    connect(viewFavoritesButton, &QPushButton::clicked, this, &func_Music::showFavorites); // 连接查看收藏夹按钮的信号槽
 
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &func_Music::updateSeekBar);
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
@@ -321,6 +327,30 @@ void func_Music::showPlaylist()
     }
 
     musicListWidget->addItems(playlistItems);  // 将播放列表显示在列表控件中
+}
+
+void func_Music::addToFavorites()
+{
+    int currentIndex = playlist->currentIndex();
+    if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
+        QString currentSong = musicListWidget->item(currentIndex)->text();
+        if (!favoriteSongs.contains(currentSong)) {
+            favoriteSongs.append(currentSong);
+            QMessageBox::information(this, "Added to Favorites", "Song added to favorites.");
+        } else {
+            QMessageBox::information(this, "Already in Favorites", "Song is already in your favorites.");
+        }
+    }
+}
+
+void func_Music::showFavorites()
+{
+    musicListWidget->clear();  // 清空当前列表
+    if (favoriteSongs.isEmpty()) {
+        musicListWidget->addItem("No favorite songs yet.");
+    } else {
+        musicListWidget->addItems(favoriteSongs);  // 显示收藏夹中的歌曲
+    }
 }
 
 void func_Music::onMediaStatusChanged(QMediaPlayer::MediaStatus status)

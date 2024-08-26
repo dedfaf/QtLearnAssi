@@ -32,6 +32,10 @@ private slots:
     void shufflePlaylist();  // 在头文件中声明 shufflePlaylist 函数
     void onMediaStatusChanged(QMediaPlayer::MediaStatus status); // 新增槽函数
 
+    // 新增的槽函数
+    void addToFavorites();  // 添加当前播放的歌曲到收藏夹
+    void showFavorites();   // 显示收藏夹中的歌曲列表
+
 private:
     QMediaPlayer *mediaPlayer;
     QMediaPlaylist *playlist;
@@ -47,7 +51,12 @@ private:
     QPushButton *musicSelectionButton;
     QPushButton *changePlayModeButton;
     QPushButton *viewPlaylistButton;
+    QPushButton *addToFavoritesButton; // 新增的按钮
+    QPushButton *viewFavoritesButton;  // 新增的按钮
     QListWidget *musicListWidget;
+
+    QStringList favoritesList; // 删除了原有的 favoritesList 变量
+    QStringList favoriteSongs; // 新增的用于存储收藏歌曲的列表
 
     enum PlayMode {
         Loop,
