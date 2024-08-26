@@ -365,6 +365,7 @@ void func_Music::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
         } else if (currentPlayMode == Random) {
             shufflePlaylist();  // 在 Random 模式下，重新打乱播放列表
             playNextSong();  // 播放下一首歌曲
+            showPlaylist();  // 自动显示播放列表
         }
     }
     // 更新歌曲信息
