@@ -2,6 +2,7 @@
 #include "ui_func_map.h"
 #include <QDir>
 #include <QtDebug>
+#include <QSslSocket>
 
 func_map::func_map(QWidget *parent) :
     QWidget(parent),

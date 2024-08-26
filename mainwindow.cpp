@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "func_music.h"
+#include <QNetworkReply>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stackedWidget_func->setCurrentIndex(4);
 
     qInfo() << ui->stackedWidget_func->currentIndex();
+    qDebug() << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << QSslSocket::supportsSsl();
+    qDebug() << QSslSocket::sslLibraryVersionString();
 }
 
 MainWindow::~MainWindow()

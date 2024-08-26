@@ -3,6 +3,7 @@ QT += core gui widgets
 QT += multimedia multimediawidgets
 QT += quickwidgets
 QT += location
+QT += network
 
 
 

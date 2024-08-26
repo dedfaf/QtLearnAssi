@@ -2,6 +2,7 @@
 #define FUNC_MAP_H
 
 #include <QWidget>
+#include <QSslSocket>
 
 namespace Ui {
 class func_map;
