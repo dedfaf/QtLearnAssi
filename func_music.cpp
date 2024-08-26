@@ -19,12 +19,22 @@ func_Music::func_Music(QWidget *parent)
       mediaPlayer(new QMediaPlayer(this)),
       playlist(new QMediaPlaylist(this)),
       currentLyricIndex(0),
-      currentPlayMode(Loop)  // 默认播放模式设置为 Loop
+      currentPlayMode(Loop)
 {
-    // 初始化 UI 组件
+    setupUi();
+    connectSignals();
     mediaPlayer->setPlaylist(playlist);
+    playlist->setCurrentIndex(0);
+}
 
-    // 创建UI元素
+func_Music::~func_Music()
+{
+    delete mediaPlayer;
+    delete playlist;
+}
+
+void func_Music::setupUi()
+{
     musicImageView = new QLabel(this);
     songTitleLabel = new QLabel("Song Title", this);
     artistLabel = new QLabel("Artist", this);
@@ -36,12 +46,11 @@ func_Music::func_Music(QWidget *parent)
     downloadButton = new QPushButton("Download Song", this);
     musicSelectionButton = new QPushButton("Select Music", this);
     changePlayModeButton = new QPushButton("Play Mode: Loop", this);
-    viewPlaylistButton = new QPushButton("View Playlist", this); // 新增查看播放列表按钮
-    addToFavoritesButton = new QPushButton("Add to Favorites", this); // 新增添加到收藏夹按钮
-    viewFavoritesButton = new QPushButton("View Favorites", this); // 新增查看收藏夹按钮
+    viewPlaylistButton = new QPushButton("View Playlist", this);
+    addToFavoritesButton = new QPushButton("Add to Favorites", this);
+    viewFavoritesButton = new QPushButton("View Favorites", this);
     musicListWidget = new QListWidget(this);
 
-    // 设置布局
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(musicImageView);
     mainLayout->addWidget(songTitleLabel);
@@ -58,14 +67,16 @@ func_Music::func_Music(QWidget *parent)
     mainLayout->addWidget(downloadButton);
     mainLayout->addWidget(musicSelectionButton);
     mainLayout->addWidget(changePlayModeButton);
-    mainLayout->addWidget(viewPlaylistButton);  // 添加查看播放列表按钮到布局
-    mainLayout->addWidget(addToFavoritesButton); // 添加到收藏夹按钮到布局
-    mainLayout->addWidget(viewFavoritesButton);  // 添加查看收藏夹按钮到布局
+    mainLayout->addWidget(viewPlaylistButton);
+    mainLayout->addWidget(addToFavoritesButton);
+    mainLayout->addWidget(viewFavoritesButton);
     mainLayout->addWidget(musicListWidget);
 
     setLayout(mainLayout);
+}
 
-    // 连接信号和槽
+void func_Music::connectSignals()
+{
     connect(playPauseButton, &QPushButton::clicked, this, &func_Music::togglePlayPause);
     connect(prevButton, &QPushButton::clicked, this, &func_Music::playPreviousSong);
     connect(nextButton, &QPushButton::clicked, this, &func_Music::playNextSong);
@@ -74,24 +85,19 @@ func_Music::func_Music(QWidget *parent)
     });
     connect(musicSelectionButton, &QPushButton::clicked, this, &func_Music::on_selectMusicButton_clicked);
     connect(changePlayModeButton, &QPushButton::clicked, this, &func_Music::changePlayMode);
-    connect(viewPlaylistButton, &QPushButton::clicked, this, &func_Music::showPlaylist);  // 连接查看播放列表按钮的信号槽
-    connect(addToFavoritesButton, &QPushButton::clicked, this, &func_Music::addToFavorites); // 连接添加到收藏夹按钮的信号槽
-    connect(viewFavoritesButton, &QPushButton::clicked, this, &func_Music::showFavorites); // 连接查看收藏夹按钮的信号槽
+    connect(viewPlaylistButton, &QPushButton::clicked, this, &func_Music::showPlaylist);
+    connect(addToFavoritesButton, &QPushButton::clicked, this, &func_Music::addToFavorites);
+    connect(viewFavoritesButton, &QPushButton::clicked, this, &func_Music::showFavorites);
 
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &func_Music::updateSeekBar);
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
         seekBar->setMaximum(duration);
     });
-    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &func_Music::onMediaStatusChanged); // 连接媒体状态变化信号
+    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &func_Music::onMediaStatusChanged);
 
-    // 初始化播放列表为空
-    playlist->setCurrentIndex(0);
-}
-
-func_Music::~func_Music()
-{
-    delete mediaPlayer;
-    delete playlist;
+    connect(seekBar, &QSlider::sliderReleased, this, [=]() {
+        onSeekBarValueChanged(seekBar->value());
+    });
 }
 
 void func_Music::togglePlayPause()
@@ -105,56 +111,12 @@ void func_Music::togglePlayPause()
     }
 }
 
-void func_Music::playPreviousSong()
+void func_Music::onSeekBarValueChanged(int value)
 {
-    if (currentPlayMode == SingleLoop) {
-        // 在 SingleLoop 模式下，上一首按钮不影响播放模式，但可以跳转到列表的上一首
-        int currentIndex = playlist->currentIndex();
-        if (currentIndex > 0) {
-            playlist->setCurrentIndex(currentIndex - 1);
-        } else {
-            playlist->setCurrentIndex(playlist->mediaCount() - 1);
-        }
-        mediaPlayer->play();
-        updateSongInfo();
-    } else if (playlist->mediaCount() > 0) {
-        playlist->previous();
-        mediaPlayer->play();
-        updateSongInfo();
+    if (mediaPlayer->state() == QMediaPlayer::PlayingState) {
+        mediaPlayer->setPosition(value);  // 设置媒体播放器的当前位置
     }
 }
-
-void func_Music::playNextSong()
-{
-    if (currentPlayMode == SingleLoop) {
-        // 在 SingleLoop 模式下，下一首按钮不影响播放模式，但可以跳转到列表的下一首
-        int currentIndex = playlist->currentIndex();
-        if (currentIndex < playlist->mediaCount() - 1) {
-            playlist->setCurrentIndex(currentIndex + 1);
-        } else {
-            playlist->setCurrentIndex(0);
-        }
-        mediaPlayer->play();
-        updateSongInfo();
-    } else if (playlist->mediaCount() > 0) {
-        playlist->next();
-        mediaPlayer->play();
-        updateSongInfo();
-    }
-}
-
-void func_Music::updateSongInfo()
-{
-    int currentIndex = playlist->currentIndex();
-    if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
-        QString currentSong = musicListWidget->item(currentIndex)->text();
-        qDebug() << "Updating song info: Index" << currentIndex << ", Song:" << currentSong;
-        songTitleLabel->setText(QFileInfo(currentSong).baseName());
-    } else {
-        qDebug() << "Current index out of range:" << currentIndex;
-    }
-}
-
 
 void func_Music::updateSeekBar()
 {
@@ -199,18 +161,35 @@ void func_Music::updateLyric()
     }
 }
 
+void func_Music::playNextSong()
+{
+    int currentIndex = playlist->currentIndex();
+    int nextIndex = (currentIndex + 1) % playlist->mediaCount(); // 循环播放
+    playlist->setCurrentIndex(nextIndex);
+    mediaPlayer->play();
+    updateSongInfo();
+}
+
+void func_Music::playPreviousSong()
+{
+    int currentIndex = playlist->currentIndex();
+    int previousIndex = (currentIndex - 1 + playlist->mediaCount()) % playlist->mediaCount(); // 循环播放
+    playlist->setCurrentIndex(previousIndex);
+    mediaPlayer->play();
+    updateSongInfo();
+}
+
+
+
 void func_Music::on_selectMusicButton_clicked()
 {
-    // 加载音乐文件
     loadMusicFiles();
 
-    // 获取扫描到的歌曲列表
     QStringList musicFiles;
     for (int i = 0; i < musicListWidget->count(); ++i) {
         musicFiles << musicListWidget->item(i)->text();
     }
 
-    // 显示弹窗
     if (!musicFiles.isEmpty()) {
         QMessageBox::information(this, "Scanned Songs", "Scanned Songs:\n" + musicFiles.join("\n"));
     } else {
@@ -370,5 +349,29 @@ void func_Music::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
     }
     // 更新歌曲信息
     updateSongInfo();
+}
+
+void func_Music::updateSongInfo()
+{
+    int currentIndex = playlist->currentIndex();
+    if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
+        QString currentSong = musicListWidget->item(currentIndex)->text();
+        songTitleLabel->setText(QFileInfo(currentSong).baseName()); // 显示歌曲标题（不包含扩展名）
+        artistLabel->setText("Artist Unknown"); // 这里可以根据实际情况设置艺术家信息
+
+        // 设置音乐封面图片，假设图片名称与音乐文件相同，路径为 musicImages 文件夹
+        QFileInfo fileInfo(currentSong);
+        QString imagePath = QString("musicImages/%1.jpg").arg(fileInfo.baseName());
+        QPixmap pixmap(imagePath);
+        if (!pixmap.isNull()) {
+            musicImageView->setPixmap(pixmap);
+        } else {
+            musicImageView->clear(); // 如果没有找到图片，则清空显示
+        }
+    } else {
+        songTitleLabel->setText("No Song Playing");
+        artistLabel->setText("");
+        musicImageView->clear();
+    }
 }
 
