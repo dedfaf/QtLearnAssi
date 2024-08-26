@@ -59,12 +59,21 @@ void func_Music::setupUi()
     mainLayout->addWidget(artistLabel);
     mainLayout->addWidget(seekBar);
 
+    // Layout for time labels
+    QHBoxLayout *timeLayout = new QHBoxLayout;
+    timeLayout->addWidget(currentTimeLabel);
+    timeLayout->addStretch(); // To push totalTimeLabel to the right
+    timeLayout->addWidget(totalTimeLabel);
+
+    // Layout for controls and buttons
     QHBoxLayout *controlLayout = new QHBoxLayout;
     controlLayout->addWidget(prevButton);
     controlLayout->addWidget(playPauseButton);
     controlLayout->addWidget(nextButton);
-    mainLayout->addLayout(controlLayout);
 
+    // Add controls and buttons to the main layout
+    mainLayout->addLayout(controlLayout);
+    mainLayout->addLayout(timeLayout); // Add time layout below seekBar
     mainLayout->addWidget(lyricLabel);
     mainLayout->addWidget(downloadButton);
     mainLayout->addWidget(musicSelectionButton);
@@ -74,15 +83,9 @@ void func_Music::setupUi()
     mainLayout->addWidget(viewFavoritesButton);
     mainLayout->addWidget(musicListWidget);
 
-    QHBoxLayout *timeLayout = new QHBoxLayout;
-    timeLayout->addWidget(currentTimeLabel);
-    timeLayout->addStretch();
-    timeLayout->addWidget(totalTimeLabel);
-
-    mainLayout->addLayout(timeLayout);
-
     setLayout(mainLayout);
 }
+
 
 void func_Music::connectSignals()
 {
