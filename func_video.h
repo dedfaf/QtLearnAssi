@@ -1,26 +1,47 @@
+#ifndef FUNC_VIDEO_H
+#define FUNC_VIDEO_H
+
 #include <QWidget>
 #include <QMediaPlayer>
 #include <QVideoWidget>
-#include <QPushButton>
 #include <QSlider>
-#include <QVBoxLayout>
+#include <QPushButton>
+#include <QLabel>
+#include <QListWidget>
+#include <QMediaPlaylist>
 
-class func_video : public QWidget  // 将 QMainWindow 改为 QWidget，因为您已经有主页了
+class func_video : public QWidget
 {
     Q_OBJECT
 
 public:
-    func_video(QWidget *parent = nullptr);
+    explicit func_video(QWidget *parent = nullptr);
     ~func_video();
 
 private slots:
-    void openFile();
+    void togglePlayPause();
+    void playPreviousVideo();
+    void playNextVideo();
+    void updateVideoInfo();
+    void updateSeekBar();
+    void on_selectVideoButton_clicked();
+    void loadVideoFiles();
+    void changePlayMode();
+    void showPlaylist();
 
 private:
     QMediaPlayer *mediaPlayer;
     QVideoWidget *videoWidget;
-    QPushButton *playButton;
-    QPushButton *pauseButton;
-    QPushButton *stopButton;
-    QSlider *positionSlider;
+    QMediaPlaylist *playlist;
+    QSlider *seekBar;
+    QPushButton *playPauseButton;
+    QPushButton *prevButton;
+    QPushButton *nextButton;
+    QPushButton *selectVideoButton;
+    QPushButton *changePlayModeButton;
+    QPushButton *viewPlaylistButton;
+    QLabel *videoTitleLabel;
+    QListWidget *videoListWidget;
 };
+
+#endif // FUNC_VIDEO_H
