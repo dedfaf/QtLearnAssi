@@ -18,6 +18,7 @@ class func_Music : public QWidget
 public:
     explicit func_Music(QWidget *parent = nullptr);
     ~func_Music();
+    QString formatTime(qint64 duration);
 
 private slots:
     void togglePlayPause();
@@ -53,9 +54,11 @@ private:
     QPushButton *musicSelectionButton;
     QPushButton *changePlayModeButton;
     QPushButton *viewPlaylistButton;
-    QPushButton *addToFavoritesButton; // 新增的按钮
-    QPushButton *viewFavoritesButton;  // 新增的按钮
+    QPushButton *addToFavoritesButton;
+    QPushButton *viewFavoritesButton;
     QListWidget *musicListWidget;
+    QLabel *currentTimeLabel;
+    QLabel *totalTimeLabel;
 
     QList<QString> favoriteSongs; // 删除了原有的 favoritesList 变量
     QVector<QPair<qint64, QString>> lyrics; // 存储歌词

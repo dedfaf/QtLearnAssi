@@ -50,6 +50,8 @@ void func_Music::setupUi()
     addToFavoritesButton = new QPushButton("Add to Favorites", this);
     viewFavoritesButton = new QPushButton("View Favorites", this);
     musicListWidget = new QListWidget(this);
+    currentTimeLabel = new QLabel("00:00", this);
+    totalTimeLabel = new QLabel("00:00", this);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(musicImageView);
@@ -72,6 +74,13 @@ void func_Music::setupUi()
     mainLayout->addWidget(viewFavoritesButton);
     mainLayout->addWidget(musicListWidget);
 
+    QHBoxLayout *timeLayout = new QHBoxLayout;
+    timeLayout->addWidget(currentTimeLabel);
+    timeLayout->addStretch();
+    timeLayout->addWidget(totalTimeLabel);
+
+    mainLayout->addLayout(timeLayout);
+
     setLayout(mainLayout);
 }
 
@@ -92,6 +101,9 @@ void func_Music::connectSignals()
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &func_Music::updateSeekBar);
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
         seekBar->setMaximum(duration);
+
+        // 更新总时间标签
+        totalTimeLabel->setText(formatTime(duration));
     });
     connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &func_Music::onMediaStatusChanged);
 
@@ -99,6 +111,7 @@ void func_Music::connectSignals()
         onSeekBarValueChanged(seekBar->value());
     });
 }
+
 
 void func_Music::togglePlayPause()
 {
@@ -123,11 +136,24 @@ void func_Music::updateSeekBar()
     qint64 currentPosition = mediaPlayer->position();
     seekBar->setValue(currentPosition);
 
+    // 更新当前时间标签
+    QTime currentTime((currentPosition / 3600000) % 60, (currentPosition / 60000) % 60, (currentPosition / 1000) % 60);
+    currentTimeLabel->setText(currentTime.toString("mm:ss"));
+
     while (currentLyricIndex < lyrics.size() && lyrics[currentLyricIndex].first <= currentPosition) {
         lyricLabel->setText(lyrics[currentLyricIndex].second);
         ++currentLyricIndex;
     }
 }
+
+QString func_Music::formatTime(qint64 duration)
+{
+    int minutes = (duration / 60000);  // 将毫秒转换为分钟
+    int seconds = (duration % 60000) / 1000;  // 取余数并转换为秒
+    return QString::asprintf("%02d:%02d", minutes, seconds);
+}
+
+
 
 void func_Music::loadLyrics(const QString &lyricPath)
 {
