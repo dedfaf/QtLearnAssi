@@ -6,6 +6,7 @@
 #include <QVideoWidget>
 #include <QPushButton>
 #include <QSlider>
+#include <QStringList>
 
 class func_video : public QWidget
 {
@@ -21,11 +22,13 @@ private slots:
     void forward();
     void rewind();
     void openFile();
-    void updateDuration(qint64 duration); // 更新进度条范围的槽函数
-    void updatePosition(qint64 position); // 更新进度条位置的槽函数
-    void seek(int position);              // 跳转到指定位置的槽函数
+    void updateDuration(qint64 duration);
+    void updatePosition(qint64 position);
+    void seek(int position);
     void setVolume(int volume);
     void scanUsbDrive(const QString &drivePath);
+    void playPrevious();  // 播放前一个视频
+    void playNext();      // 播放下一个视频
 
 private:
     QMediaPlayer *player;
@@ -37,8 +40,13 @@ private:
     QPushButton *rewindButton;
     QPushButton *openFileButton;
     QPushButton *scanUsbButton;
-    QSlider *volumeSlider;  // 音量滑块
-    QSlider *progressSlider; // 进度条
+    QPushButton *previousButton;  // 新增：前一个视频按钮
+    QPushButton *nextButton;      // 新增：下一个视频按钮
+    QSlider *volumeSlider;
+    QSlider *progressSlider;
+
+    QStringList videoFiles;  // 视频文件列表
+    int currentIndex;        // 当前播放的视频索引
 };
 
 #endif // FUNC_VIDEO_H
