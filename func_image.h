@@ -15,6 +15,9 @@ class func_image : public QWidget
 {
     Q_OBJECT
 
+protected:
+    void wheelEvent(QWheelEvent *event) override;  // 重写wheelEvent
+
 public:
     explicit func_image(QWidget *parent = nullptr);
     ~func_image();
