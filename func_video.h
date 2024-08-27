@@ -6,11 +6,9 @@
 #include <QVideoWidget>
 #include <QPushButton>
 #include <QSlider>
-#include <QFileDialog>
-#include <QDir>
-#include <QMessageBox>
 
-class func_video : public QWidget {
+class func_video : public QWidget
+{
     Q_OBJECT
 
 public:
@@ -23,11 +21,13 @@ private slots:
     void forward();
     void rewind();
     void openFile();
-    void updateDuration(qint64 duration);
-    void updatePosition(qint64 position);
-    void seek(int position);
     void setVolume(int volume);
-    void scanUsbDrive(const QString &drivePath);  // 新增槽函数声明
+    void scanUsbDrive(const QString &drivePath);
+
+    // 移除了进度条相关的槽函数声明
+    // void updateDuration(qint64 duration);
+    // void updatePosition(qint64 position);
+    // void seek(int position);
 
 private:
     QMediaPlayer *player;
@@ -38,9 +38,13 @@ private:
     QPushButton *forwardButton;
     QPushButton *rewindButton;
     QPushButton *openFileButton;
-    QPushButton *scanUsbButton;  // 新增按钮变量
-    QSlider *positionSlider;
+    QPushButton *scanUsbButton;
+    // QSlider *positionSlider;  // 移除了进度条
     QSlider *volumeSlider;
+
+    void updateDuration(qint64 duration);
+    void updatePosition(qint64 position);
+    void seek(int position);
 };
 
 #endif // FUNC_VIDEO_H

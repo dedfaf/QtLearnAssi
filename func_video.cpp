@@ -1,6 +1,9 @@
 #include "func_video.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QMessageBox>
+#include <QDir>
+#include <QFileDialog>
 
 func_video::func_video(QWidget *parent) : QWidget(parent)
 {
@@ -14,23 +17,21 @@ func_video::func_video(QWidget *parent) : QWidget(parent)
     forwardButton = new QPushButton("Forward", this);
     rewindButton = new QPushButton("Rewind", this);
     openFileButton = new QPushButton("Open File", this);
-    scanUsbButton = new QPushButton("Scan USB", this);  // 新增扫描U盘按钮
-    positionSlider = new QSlider(Qt::Horizontal, this);
-    volumeSlider = new QSlider(Qt::Horizontal, this);
+    scanUsbButton = new QPushButton("Scan USB", this);
+    volumeSlider = new QSlider(Qt::Horizontal, this); // 保留音量滑块
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(videoWidget);
 
     QHBoxLayout *controlsLayout = new QHBoxLayout;
     controlsLayout->addWidget(openFileButton);
-    controlsLayout->addWidget(scanUsbButton);  // 将按钮添加到布局
+    controlsLayout->addWidget(scanUsbButton);
     controlsLayout->addWidget(playButton);
     controlsLayout->addWidget(pauseButton);
     controlsLayout->addWidget(stopButton);
     controlsLayout->addWidget(forwardButton);
     controlsLayout->addWidget(rewindButton);
-    controlsLayout->addWidget(positionSlider);
-    controlsLayout->addWidget(volumeSlider);
+    controlsLayout->addWidget(volumeSlider); // 只保留音量滑块
 
     mainLayout->addLayout(controlsLayout);
     setLayout(mainLayout);
@@ -41,11 +42,10 @@ func_video::func_video(QWidget *parent) : QWidget(parent)
     connect(forwardButton, &QPushButton::clicked, this, &func_video::forward);
     connect(rewindButton, &QPushButton::clicked, this, &func_video::rewind);
     connect(openFileButton, &QPushButton::clicked, this, &func_video::openFile);
-    connect(scanUsbButton, &QPushButton::clicked, this, [this]() {  // 连接扫描U盘按钮
+    connect(scanUsbButton, &QPushButton::clicked, this, [this]() {
         QString usbPath = "F:/";  // 修改为您的U盘路径
         scanUsbDrive(usbPath);
     });
-    connect(positionSlider, &QSlider::valueChanged, this, &func_video::seek);
     connect(volumeSlider, &QSlider::valueChanged, this, &func_video::setVolume);
 
     connect(player, &QMediaPlayer::durationChanged, this, &func_video::updateDuration);
@@ -94,17 +94,17 @@ void func_video::openFile()
 
 void func_video::updateDuration(qint64 duration)
 {
-    positionSlider->setRange(0, duration);
+    // 进度条相关功能已移除，不再更新
 }
 
 void func_video::updatePosition(qint64 position)
 {
-    positionSlider->setValue(position);
+    // 进度条相关功能已移除，不再更新
 }
 
 void func_video::seek(int position)
 {
-    player->setPosition(position);
+    // 进度条相关功能已移除，不再处理
 }
 
 void func_video::setVolume(int volume)
@@ -112,7 +112,7 @@ void func_video::setVolume(int volume)
     player->setVolume(volume);
 }
 
-void func_video::scanUsbDrive(const QString &drivePath)  // 扫描U盘函数实现
+void func_video::scanUsbDrive(const QString &drivePath)
 {
     QDir usbDir(drivePath);
     QStringList filters;
@@ -128,7 +128,6 @@ void func_video::scanUsbDrive(const QString &drivePath)  // 扫描U盘函数实�
         play();
 
         // 如果需要将所有文件添加到某个播放列表，可以在这里实现
-        // 例如： playlist->addMedia(QUrl::fromLocalFile(file.absoluteFilePath()));
     } else {
         QMessageBox::information(this, tr("No Video Files"), tr("No MP4 files found on the USB drive."));
     }

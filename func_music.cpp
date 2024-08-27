@@ -180,7 +180,7 @@ void func_Music::loadMusicFiles()
 
     QString usbPath;
 #ifdef Q_OS_WIN
-    usbPath = "C:/Users/86135/Desktop/video";  // 在Windows上指定U盘路径，例如F盘
+    usbPath = "F:/";  // 在Windows上指定U盘路径，例如F盘
 #elif defined(Q_OS_LINUX)
     usbPath = "/media/user/USB";  // 在Linux上指定U盘路径
 #else
