@@ -1,6 +1,8 @@
 QT += core gui multimedia
 QT += core gui widgets
 QT += multimedia multimediawidgets
+QT += core gui widgets multimedia multimediawidgets
+
 
 
 

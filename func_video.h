@@ -4,44 +4,43 @@
 #include <QWidget>
 #include <QMediaPlayer>
 #include <QVideoWidget>
-#include <QSlider>
 #include <QPushButton>
-#include <QLabel>
-#include <QListWidget>
-#include <QMediaPlaylist>
+#include <QSlider>
+#include <QFileDialog>
+#include <QDir>
+#include <QMessageBox>
 
-class func_video : public QWidget
-{
+class func_video : public QWidget {
     Q_OBJECT
 
 public:
     explicit func_video(QWidget *parent = nullptr);
-    ~func_video();
 
 private slots:
-    void togglePlayPause();
-    void playPreviousVideo();
-    void playNextVideo();
-    void updateVideoInfo();
-    void updateSeekBar();
-    void on_selectVideoButton_clicked();
-    void loadVideoFiles();
-    void changePlayMode();
-    void showPlaylist();
+    void play();
+    void pause();
+    void stop();
+    void forward();
+    void rewind();
+    void openFile();
+    void updateDuration(qint64 duration);
+    void updatePosition(qint64 position);
+    void seek(int position);
+    void setVolume(int volume);
+    void scanUsbDrive(const QString &drivePath);  // 新增槽函数声明
 
 private:
-    QMediaPlayer *mediaPlayer;
+    QMediaPlayer *player;
     QVideoWidget *videoWidget;
-    QMediaPlaylist *playlist;
-    QSlider *seekBar;
-    QPushButton *playPauseButton;
-    QPushButton *prevButton;
-    QPushButton *nextButton;
-    QPushButton *selectVideoButton;
-    QPushButton *changePlayModeButton;
-    QPushButton *viewPlaylistButton;
-    QLabel *videoTitleLabel;
-    QListWidget *videoListWidget;
+    QPushButton *playButton;
+    QPushButton *pauseButton;
+    QPushButton *stopButton;
+    QPushButton *forwardButton;
+    QPushButton *rewindButton;
+    QPushButton *openFileButton;
+    QPushButton *scanUsbButton;  // 新增按钮变量
+    QSlider *positionSlider;
+    QSlider *volumeSlider;
 };
 
 #endif // FUNC_VIDEO_H

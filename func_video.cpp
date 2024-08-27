@@ -1,190 +1,135 @@
 #include "func_video.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QTimer>
-#include <QFile>
-#include <QTextStream>
-#include <QRegularExpression>
-#include <QDirIterator>
-#include <QFileInfo>
-#include <QMessageBox>
-#include <QListWidget>
-#include <QTime>
-#include <algorithm> // For std::random_shuffle
 
-func_video::func_video(QWidget *parent)
-    : QWidget(parent),
-      mediaPlayer(new QMediaPlayer(this)),
-      videoWidget(new QVideoWidget(this)),
-      playlist(new QMediaPlaylist(this))
+func_video::func_video(QWidget *parent) : QWidget(parent)
 {
-    // Initialize UI components
-    mediaPlayer->setVideoOutput(videoWidget);
-    mediaPlayer->setPlaylist(playlist);
+    player = new QMediaPlayer(this);
+    videoWidget = new QVideoWidget(this);
+    player->setVideoOutput(videoWidget);
 
-    videoTitleLabel = new QLabel("Video Title", this);
-    seekBar = new QSlider(Qt::Horizontal, this);
-    playPauseButton = new QPushButton("Play", this);
-    prevButton = new QPushButton("Previous", this);
-    nextButton = new QPushButton("Next", this);
-    selectVideoButton = new QPushButton("Select Video", this);
-    changePlayModeButton = new QPushButton("Play Mode: Loop", this);
-    viewPlaylistButton = new QPushButton("View Playlist", this);
-    videoListWidget = new QListWidget(this);
+    playButton = new QPushButton("Play", this);
+    pauseButton = new QPushButton("Pause", this);
+    stopButton = new QPushButton("Stop", this);
+    forwardButton = new QPushButton("Forward", this);
+    rewindButton = new QPushButton("Rewind", this);
+    openFileButton = new QPushButton("Open File", this);
+    scanUsbButton = new QPushButton("Scan USB", this);  // 新增扫描U盘按钮
+    positionSlider = new QSlider(Qt::Horizontal, this);
+    volumeSlider = new QSlider(Qt::Horizontal, this);
 
-    // Set layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(videoWidget);
-    mainLayout->addWidget(videoTitleLabel);
-    mainLayout->addWidget(seekBar);
 
-    QHBoxLayout *controlLayout = new QHBoxLayout;
-    controlLayout->addWidget(prevButton);
-    controlLayout->addWidget(playPauseButton);
-    controlLayout->addWidget(nextButton);
-    mainLayout->addLayout(controlLayout);
+    QHBoxLayout *controlsLayout = new QHBoxLayout;
+    controlsLayout->addWidget(openFileButton);
+    controlsLayout->addWidget(scanUsbButton);  // 将按钮添加到布局
+    controlsLayout->addWidget(playButton);
+    controlsLayout->addWidget(pauseButton);
+    controlsLayout->addWidget(stopButton);
+    controlsLayout->addWidget(forwardButton);
+    controlsLayout->addWidget(rewindButton);
+    controlsLayout->addWidget(positionSlider);
+    controlsLayout->addWidget(volumeSlider);
 
-    mainLayout->addWidget(selectVideoButton);
-    mainLayout->addWidget(changePlayModeButton);
-    mainLayout->addWidget(viewPlaylistButton);
-    mainLayout->addWidget(videoListWidget);
-
+    mainLayout->addLayout(controlsLayout);
     setLayout(mainLayout);
 
-    // Connect signals and slots
-    connect(playPauseButton, &QPushButton::clicked, this, &func_video::togglePlayPause);
-    connect(prevButton, &QPushButton::clicked, this, &func_video::playPreviousVideo);
-    connect(nextButton, &QPushButton::clicked, this, &func_video::playNextVideo);
-    connect(selectVideoButton, &QPushButton::clicked, this, &func_video::on_selectVideoButton_clicked);
-    connect(changePlayModeButton, &QPushButton::clicked, this, &func_video::changePlayMode);
-    connect(viewPlaylistButton, &QPushButton::clicked, this, &func_video::showPlaylist);
-
-    connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &func_video::updateSeekBar);
-    connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
-        seekBar->setMaximum(duration);
+    connect(playButton, &QPushButton::clicked, this, &func_video::play);
+    connect(pauseButton, &QPushButton::clicked, this, &func_video::pause);
+    connect(stopButton, &QPushButton::clicked, this, &func_video::stop);
+    connect(forwardButton, &QPushButton::clicked, this, &func_video::forward);
+    connect(rewindButton, &QPushButton::clicked, this, &func_video::rewind);
+    connect(openFileButton, &QPushButton::clicked, this, &func_video::openFile);
+    connect(scanUsbButton, &QPushButton::clicked, this, [this]() {  // 连接扫描U盘按钮
+        QString usbPath = "F:/";  // 修改为您的U盘路径
+        scanUsbDrive(usbPath);
     });
+    connect(positionSlider, &QSlider::valueChanged, this, &func_video::seek);
+    connect(volumeSlider, &QSlider::valueChanged, this, &func_video::setVolume);
 
-    playlist->setCurrentIndex(0);
+    connect(player, &QMediaPlayer::durationChanged, this, &func_video::updateDuration);
+    connect(player, &QMediaPlayer::positionChanged, this, &func_video::updatePosition);
+
+    player->setVolume(50);
+    volumeSlider->setRange(0, 100);
+    volumeSlider->setValue(50);
 }
 
-func_video::~func_video()
+void func_video::play()
 {
-    delete mediaPlayer;
-    delete playlist;
+    player->play();
 }
 
-void func_video::togglePlayPause()
+void func_video::pause()
 {
-    if (mediaPlayer->state() == QMediaPlayer::PlayingState) {
-        mediaPlayer->pause();
-        playPauseButton->setText("Play");
-    } else {
-        mediaPlayer->play();
-        playPauseButton->setText("Pause");
+    player->pause();
+}
+
+void func_video::stop()
+{
+    player->stop();
+}
+
+void func_video::forward()
+{
+    qint64 newPosition = player->position() + 5000;  // 快进5秒
+    player->setPosition(newPosition);
+}
+
+void func_video::rewind()
+{
+    qint64 newPosition = player->position() - 5000;  // 倒退5秒
+    player->setPosition(newPosition);
+}
+
+void func_video::openFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Video File"), "", tr("Video Files (*.mp4 *.avi *.mkv)"));
+    if (!fileName.isEmpty()) {
+        player->setMedia(QUrl::fromLocalFile(fileName));
+        play();  // 加载后自动开始播放
     }
 }
 
-void func_video::playPreviousVideo()
+void func_video::updateDuration(qint64 duration)
 {
-    if (playlist->mediaCount() > 0) {
-        playlist->previous();
-        mediaPlayer->play();
-        updateVideoInfo();
-    }
+    positionSlider->setRange(0, duration);
 }
 
-void func_video::playNextVideo()
+void func_video::updatePosition(qint64 position)
 {
-    if (playlist->mediaCount() > 0) {
-        playlist->next();
-        mediaPlayer->play();
-        updateVideoInfo();
-    }
+    positionSlider->setValue(position);
 }
 
-void func_video::updateVideoInfo()
+void func_video::seek(int position)
 {
-    int currentIndex = playlist->currentIndex();
-    if (currentIndex >= 0 && currentIndex < videoListWidget->count()) {
-        QString currentVideo = videoListWidget->item(currentIndex)->text();
-        videoTitleLabel->setText(QFileInfo(currentVideo).baseName());
-    }
+    player->setPosition(position);
 }
 
-void func_video::updateSeekBar()
+void func_video::setVolume(int volume)
 {
-    qint64 currentPosition = mediaPlayer->position();
-    seekBar->setValue(currentPosition);
+    player->setVolume(volume);
 }
 
-void func_video::on_selectVideoButton_clicked()
+void func_video::scanUsbDrive(const QString &drivePath)  // 扫描U盘函数实现
 {
-    loadVideoFiles();
-}
-
-void func_video::loadVideoFiles()
-{
+    QDir usbDir(drivePath);
     QStringList filters;
-    filters << "*.mp4" << "*.avi" << "*.mkv"; // Video file formats
+    filters << "*.mp4";  // 只扫描MP4文件
+    QFileInfoList fileList = usbDir.entryInfoList(filters, QDir::Files);
 
-    QString usbPath;
-#ifdef Q_OS_WIN
-    usbPath = "F:/";  // For Windows, specify the USB drive path, e.g., F:/
-#elif defined(Q_OS_LINUX)
-    usbPath = "/media/user/USB";  // For Linux, specify the USB drive path
-#else
-    usbPath = QDir::homePath();  // Default path
-#endif
+    if (!fileList.isEmpty()) {
+        // 停止当前播放
+        player->stop();
 
-    QDirIterator it(usbPath, filters, QDir::Files, QDirIterator::Subdirectories);
-    QStringList videoFiles;
+        // 设置找到的第一个视频文件并播放
+        player->setMedia(QUrl::fromLocalFile(fileList.first().absoluteFilePath()));
+        play();
 
-    while (it.hasNext()) {
-        it.next();
-        QFileInfo fileInfo(it.filePath());
-        videoFiles << fileInfo.absoluteFilePath();  // Use absolute path
+        // 如果需要将所有文件添加到某个播放列表，可以在这里实现
+        // 例如： playlist->addMedia(QUrl::fromLocalFile(file.absoluteFilePath()));
+    } else {
+        QMessageBox::information(this, tr("No Video Files"), tr("No MP4 files found on the USB drive."));
     }
-
-    if (videoFiles.isEmpty()) {
-        QMessageBox::information(this, "No Video Files", "No video files found on the USB drive.");
-        return;
-    }
-
-    videoListWidget->clear();
-    videoListWidget->addItems(videoFiles);
-
-    playlist->clear();  // Clear the playlist
-    foreach (const QString &videoFile, videoFiles) {
-        QMediaContent mediaContent(QUrl::fromLocalFile(videoFile));
-        playlist->addMedia(mediaContent);  // Add all videos to the playlist
-    }
-    playlist->setCurrentIndex(0);  // Ensure the playlist starts with the first video
-
-    connect(videoListWidget, &QListWidget::itemClicked, [this](QListWidgetItem *item) {
-        int index = videoListWidget->row(item);
-        playlist->setCurrentIndex(index);
-        mediaPlayer->play();
-        playPauseButton->setText("Pause");
-        updateVideoInfo();
-    });
-}
-
-void func_video::changePlayMode()
-{
-    // Similar to music player play mode logic
-    // Code here to change video play modes (e.g., Loop, Single Loop, Random)
-}
-
-void func_video::showPlaylist()
-{
-    QStringList playlistItems;
-    for (int i = 0; i < playlist->mediaCount(); ++i) {
-        QUrl mediaUrl = playlist->media(i).canonicalUrl();
-        playlistItems << mediaUrl.toLocalFile();  // Add file paths to the list
-    }
-
-    // Show the current playlist in a message box
-    QMessageBox::information(this, "Playlist", "Current Playlist:\n" + playlistItems.join("\n"));
 }
