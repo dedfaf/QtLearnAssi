@@ -18,7 +18,10 @@ func_video::func_video(QWidget *parent) : QWidget(parent)
     rewindButton = new QPushButton("Rewind", this);
     openFileButton = new QPushButton("Open File", this);
     scanUsbButton = new QPushButton("Scan USB", this);
-    volumeSlider = new QSlider(Qt::Horizontal, this); // 保留音量滑块
+    volumeSlider = new QSlider(Qt::Horizontal, this); // 音量滑块
+    progressSlider = new QSlider(Qt::Horizontal, this); // 进度条
+
+    progressSlider->setRange(0, 0);  // 初始范围为 0，因为还没有加载视频
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(videoWidget);
@@ -31,8 +34,9 @@ func_video::func_video(QWidget *parent) : QWidget(parent)
     controlsLayout->addWidget(stopButton);
     controlsLayout->addWidget(forwardButton);
     controlsLayout->addWidget(rewindButton);
-    controlsLayout->addWidget(volumeSlider); // 只保留音量滑块
+    controlsLayout->addWidget(volumeSlider); // 音量滑块
 
+    mainLayout->addWidget(progressSlider); // 将进度条添加到布局
     mainLayout->addLayout(controlsLayout);
     setLayout(mainLayout);
 
@@ -47,6 +51,7 @@ func_video::func_video(QWidget *parent) : QWidget(parent)
         scanUsbDrive(usbPath);
     });
     connect(volumeSlider, &QSlider::valueChanged, this, &func_video::setVolume);
+    connect(progressSlider, &QSlider::sliderMoved, this, &func_video::seek); // 进度条拖动
 
     connect(player, &QMediaPlayer::durationChanged, this, &func_video::updateDuration);
     connect(player, &QMediaPlayer::positionChanged, this, &func_video::updatePosition);
@@ -94,17 +99,19 @@ void func_video::openFile()
 
 void func_video::updateDuration(qint64 duration)
 {
-    // 进度条相关功能已移除，不再更新
+    progressSlider->setRange(0, duration); // 更新进度条的范围
 }
 
 void func_video::updatePosition(qint64 position)
 {
-    // 进度条相关功能已移除，不再更新
+    if (!progressSlider->isSliderDown()) {
+        progressSlider->setValue(position); // 更新进度条的位置
+    }
 }
 
 void func_video::seek(int position)
 {
-    // 进度条相关功能已移除，不再处理
+    player->setPosition(position); // 根据进度条的位置设置播放位置
 }
 
 void func_video::setVolume(int volume)
@@ -120,10 +127,8 @@ void func_video::scanUsbDrive(const QString &drivePath)
     QFileInfoList fileList = usbDir.entryInfoList(filters, QDir::Files);
 
     if (!fileList.isEmpty()) {
-        // 停止当前播放
         player->stop();
 
-        // 设置找到的第一个视频文件并播放
         player->setMedia(QUrl::fromLocalFile(fileList.first().absoluteFilePath()));
         play();
 

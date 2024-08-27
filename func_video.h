@@ -21,13 +21,11 @@ private slots:
     void forward();
     void rewind();
     void openFile();
+    void updateDuration(qint64 duration); // 更新进度条范围的槽函数
+    void updatePosition(qint64 position); // 更新进度条位置的槽函数
+    void seek(int position);              // 跳转到指定位置的槽函数
     void setVolume(int volume);
     void scanUsbDrive(const QString &drivePath);
-
-    // 移除了进度条相关的槽函数声明
-    // void updateDuration(qint64 duration);
-    // void updatePosition(qint64 position);
-    // void seek(int position);
 
 private:
     QMediaPlayer *player;
@@ -39,12 +37,8 @@ private:
     QPushButton *rewindButton;
     QPushButton *openFileButton;
     QPushButton *scanUsbButton;
-    // QSlider *positionSlider;  // 移除了进度条
-    QSlider *volumeSlider;
-
-    void updateDuration(qint64 duration);
-    void updatePosition(qint64 position);
-    void seek(int position);
+    QSlider *volumeSlider;  // 音量滑块
+    QSlider *progressSlider; // 进度条
 };
 
 #endif // FUNC_VIDEO_H
