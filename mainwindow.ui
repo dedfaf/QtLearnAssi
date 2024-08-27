@@ -106,7 +106,7 @@
          <item>
           <widget class="QStackedWidget" name="stackedWidget_func">
            <property name="currentIndex">
-            <number>2</number>
+            <number>3</number>
            </property>
            <widget class="QWidget" name="page_music">
             <widget class="func_Music" name="widget" native="true">
@@ -150,7 +150,7 @@
              </property>
             </widget>
            </widget>
-           <widget class="QWidget" name="page_weather">
+           <widget class="func_weather" name="page_weather">
             <widget class="QLabel" name="label_5">
              <property name="geometry">
               <rect>
@@ -242,6 +242,12 @@
    <class>timeDisplay</class>
    <extends>QWidget</extends>
    <header location="global">timedisplay.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>func_weather</class>
+   <extends>QWidget</extends>
+   <header location="global">func_weather.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

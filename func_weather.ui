@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>func_weather</class>
+ <widget class="QWidget" name="func_weather">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="locationLabel">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>90</y>
+      <width>641</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>地点</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dateLabel">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>120</y>
+      <width>601</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>更新日期</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="weatherLabel">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>150</y>
+      <width>601</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>天气</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="temperatureLabel">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>180</y>
+      <width>591</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>最高/最低</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="copyright">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>70</y>
+      <width>471</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>车载天气系统               --数据来源：心知天气</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="wind">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>210</y>
+      <width>371</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>风向：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="humidity">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>240</y>
+      <width>271</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>湿度：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dateLabel2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>270</y>
+      <width>541</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>日期：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="weatherLabel2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>290</y>
+      <width>601</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>天气</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="temperatureLabel2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>310</y>
+      <width>591</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>最高/最低</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="wind2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>330</y>
+      <width>371</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>风向：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="humidity2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>350</y>
+      <width>281</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>湿度：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="humidity_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>350</y>
+      <width>281</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>湿度：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="weatherLabel_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>290</y>
+      <width>601</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>天气</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="wind_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>330</y>
+      <width>371</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>风向：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dateLabel_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>270</y>
+      <width>541</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>日期：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="temperatureLabel_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>310</y>
+      <width>591</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>最高/最低</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="cityInput">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>100</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;shiyan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ok">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>100</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>查询</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

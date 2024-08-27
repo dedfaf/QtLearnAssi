@@ -21,17 +21,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     func_music.cpp \
+    func_weather.cpp \
     main.cpp \
     mainwindow.cpp \
     timedisplay.cpp
 
 HEADERS += \
     func_music.h \
+    func_weather.h \
     mainwindow.h \
     timedisplay.h
 
 FORMS += \
     func_music.ui \
+    func_weather.ui \
     mainwindow.ui \
     timedisplay.ui
 
