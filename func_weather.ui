@@ -6,280 +6,377 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1153</width>
+    <height>646</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="locationLabel">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>90</y>
-      <width>641</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>地点</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dateLabel">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>120</y>
-      <width>601</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>更新日期</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="weatherLabel">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>150</y>
-      <width>601</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>天气</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="temperatureLabel">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>180</y>
-      <width>591</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>最高/最低</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="copyright">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>70</y>
-      <width>471</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>车载天气系统               --数据来源：心知天气</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="wind">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>210</y>
-      <width>371</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>风向：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="humidity">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>240</y>
-      <width>271</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>湿度：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dateLabel2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>270</y>
-      <width>541</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>日期：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="weatherLabel2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>290</y>
-      <width>601</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>天气</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="temperatureLabel2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>310</y>
-      <width>591</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>最高/最低</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="wind2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>330</y>
-      <width>371</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>风向：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="humidity2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>350</y>
-      <width>281</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>湿度：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="humidity_3">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>350</y>
-      <width>281</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>湿度：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="weatherLabel_3">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>290</y>
-      <width>601</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>天气</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="wind_3">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>330</y>
-      <width>371</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>风向：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dateLabel_3">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>270</y>
-      <width>541</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>日期：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="temperatureLabel_3">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>310</y>
-      <width>591</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>最高/最低</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="cityInput">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>100</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="html">
-     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;shiyan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ok">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>100</y>
-      <width>93</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>查询</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QLabel" name="daban">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>25</height>
+     <x>40</x>
+     <y>540</y>
+     <width>1071</width>
+     <height>19</height>
     </rect>
    </property>
+   <property name="text">
+    <string>打扮建议</string>
+   </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QLabel" name="shiwai">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>400</y>
+     <width>1071</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>室外活动</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="temperatureLabel_3">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>320</y>
+     <width>591</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>最高/最低</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="humidity">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>240</y>
+     <width>271</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>湿度：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="guomin">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>440</y>
+     <width>1061</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>过敏建议</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="xiche">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>480</y>
+     <width>1071</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>洗车建议</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="ziwaixian">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>460</y>
+     <width>1081</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>紫外线强度</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="wind2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>340</y>
+     <width>371</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>风向：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="humidity_3">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>360</y>
+     <width>281</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>湿度：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lumian">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>520</y>
+     <width>1071</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>路面状况</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="chuanyi">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>500</y>
+     <width>1081</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>穿衣建议</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="copyright">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>70</y>
+     <width>471</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>车载天气系统               --数据来源：心知天气</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="weatherLabel_3">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>300</y>
+     <width>601</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>天气</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="locationLabel">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>100</y>
+     <width>641</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>地点</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="temperatureLabel2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>320</y>
+     <width>341</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>最高/最低</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="icon">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>120</y>
+     <width>151</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="humidity2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>360</y>
+     <width>281</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>湿度：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="wind_3">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>340</y>
+     <width>371</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>风向：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="dateLabel_3">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>280</y>
+     <width>541</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>日期：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="daisan">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>420</y>
+     <width>1051</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>带伞建议</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="weatherLabel">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>160</y>
+     <width>601</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>天气</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="kongtiao">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>380</y>
+     <width>1061</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>空调建议</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="dateLabel2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>280</y>
+     <width>311</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>日期：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="weatherLabel2">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>300</y>
+     <width>301</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>天气</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="temperatureLabel">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>190</y>
+     <width>591</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>温度</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="wind">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>220</y>
+     <width>371</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>风向：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="dateLabel">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>130</y>
+     <width>601</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>日期:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>70</y>
+     <width>591</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Tips:左上角输入城市（地级市及以上）即可切换对应城市天气预报</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
