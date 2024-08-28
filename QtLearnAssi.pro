@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    chatwindow.cpp \
     func_image.cpp \
     func_map.cpp \
     func_music.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
     timedisplay.cpp
 
 HEADERS += \
+    chatwindow.h \
     func_image.h \
     func_map.h \
     func_music.h \
@@ -37,6 +39,7 @@ HEADERS += \
     timedisplay.h
 
 FORMS += \
+    chatwindow.ui \
     func_image.ui \
     func_map.ui \
     func_music.ui \
