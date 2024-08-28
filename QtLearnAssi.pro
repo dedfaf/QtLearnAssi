@@ -2,6 +2,8 @@ QT += core gui multimedia
 QT += core gui widgets
 QT += multimedia multimediawidgets
 QT += core gui network
+QT += core gui charts
+
 RESOURCES += icon.qrc
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

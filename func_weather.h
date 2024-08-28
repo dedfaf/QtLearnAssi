@@ -8,6 +8,13 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QLineEdit>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <QtCharts/QCategoryAxis>
+#include <QDebug>
+
+using namespace QtCharts;
 
 namespace Ui {
 class func_weather;
@@ -28,6 +35,9 @@ private:
     QNetworkAccessManager *networkManager;
     QLineEdit *locationInput;
     void processWeatherData(const QJsonObject &jsonObject, int source);
+    QChart *chart;
+    QLineSeries *seriesHigh;
+    QLineSeries *seriesLow;
 
 private slots:
     void onUserInputChanged(const QString &text);

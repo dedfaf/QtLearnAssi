@@ -42,8 +42,8 @@
   <widget class="QLabel" name="temperatureLabel_3">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>320</y>
+     <x>40</x>
+     <y>290</y>
      <width>591</width>
      <height>19</height>
     </rect>
@@ -55,8 +55,8 @@
   <widget class="QLabel" name="humidity">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>240</y>
+     <x>40</x>
+     <y>210</y>
      <width>271</width>
      <height>19</height>
     </rect>
@@ -107,8 +107,8 @@
   <widget class="QLabel" name="wind2">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>340</y>
+     <x>300</x>
+     <y>180</y>
      <width>371</width>
      <height>19</height>
     </rect>
@@ -120,8 +120,8 @@
   <widget class="QLabel" name="humidity_3">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>360</y>
+     <x>40</x>
+     <y>330</y>
      <width>281</width>
      <height>19</height>
     </rect>
@@ -159,8 +159,8 @@
   <widget class="QLabel" name="copyright">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>70</y>
+     <x>40</x>
+     <y>40</y>
      <width>471</width>
      <height>19</height>
     </rect>
@@ -172,8 +172,8 @@
   <widget class="QLabel" name="weatherLabel_3">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>300</y>
+     <x>40</x>
+     <y>270</y>
      <width>601</width>
      <height>19</height>
     </rect>
@@ -185,8 +185,8 @@
   <widget class="QLabel" name="locationLabel">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>100</y>
+     <x>40</x>
+     <y>70</y>
      <width>641</width>
      <height>19</height>
     </rect>
@@ -198,8 +198,8 @@
   <widget class="QLabel" name="temperatureLabel2">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>320</y>
+     <x>300</x>
+     <y>160</y>
      <width>341</width>
      <height>19</height>
     </rect>
@@ -211,8 +211,8 @@
   <widget class="QLabel" name="icon">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>120</y>
+     <x>450</x>
+     <y>220</y>
      <width>151</width>
      <height>131</height>
     </rect>
@@ -224,8 +224,8 @@
   <widget class="QLabel" name="humidity2">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>360</y>
+     <x>300</x>
+     <y>200</y>
      <width>281</width>
      <height>19</height>
     </rect>
@@ -237,8 +237,8 @@
   <widget class="QLabel" name="wind_3">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>340</y>
+     <x>40</x>
+     <y>310</y>
      <width>371</width>
      <height>19</height>
     </rect>
@@ -250,8 +250,8 @@
   <widget class="QLabel" name="dateLabel_3">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>280</y>
+     <x>40</x>
+     <y>250</y>
      <width>541</width>
      <height>19</height>
     </rect>
@@ -276,8 +276,8 @@
   <widget class="QLabel" name="weatherLabel">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>160</y>
+     <x>40</x>
+     <y>130</y>
      <width>601</width>
      <height>19</height>
     </rect>
@@ -302,8 +302,8 @@
   <widget class="QLabel" name="dateLabel2">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>280</y>
+     <x>300</x>
+     <y>120</y>
      <width>311</width>
      <height>19</height>
     </rect>
@@ -315,8 +315,8 @@
   <widget class="QLabel" name="weatherLabel2">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>300</y>
+     <x>300</x>
+     <y>140</y>
      <width>301</width>
      <height>19</height>
     </rect>
@@ -328,8 +328,8 @@
   <widget class="QLabel" name="temperatureLabel">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>190</y>
+     <x>40</x>
+     <y>160</y>
      <width>591</width>
      <height>19</height>
     </rect>
@@ -341,8 +341,8 @@
   <widget class="QLabel" name="wind">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>220</y>
+     <x>40</x>
+     <y>190</y>
      <width>371</width>
      <height>19</height>
     </rect>
@@ -354,8 +354,8 @@
   <widget class="QLabel" name="dateLabel">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>130</y>
+     <x>40</x>
+     <y>100</y>
      <width>601</width>
      <height>19</height>
     </rect>
@@ -367,8 +367,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>70</y>
+     <x>500</x>
+     <y>40</y>
      <width>591</width>
      <height>19</height>
     </rect>
@@ -377,7 +377,24 @@
     <string>Tips:左上角输入城市（地级市及以上）即可切换对应城市天气预报</string>
    </property>
   </widget>
+  <widget class="QChartView" name="chartView">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>70</y>
+     <width>511</width>
+     <height>281</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">qchartview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

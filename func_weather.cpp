@@ -4,7 +4,10 @@
 func_weather::func_weather(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::func_weather),
-    networkManager(new QNetworkAccessManager(this))
+    networkManager(new QNetworkAccessManager(this)),
+    chart(new QChart),
+    seriesHigh(new QLineSeries),
+    seriesLow(new QLineSeries)
 {
 
     locationInput = new QLineEdit(this);
@@ -19,7 +22,7 @@ func_weather::func_weather(QWidget *parent) :
     connect(networkManager, &QNetworkAccessManager::finished, this, &func_weather::onWeatherDataReceived);
     networkManager->get(request);
 
-    QUrl url2("http://api.seniverse.com/v3/life/suggestion.json?key=S2OKf1-kmmUzvOsML&location=%E5%8D%81%E5%A0%B0&language=zh-Hans&days=1");
+    QUrl url2("http://api.seniverse.com/v3/life/suggestion.json?key=S2OKf1-kmmUzvOsML&location=beijing&language=zh-Hans&days=1");
     QNetworkRequest request2(url2);
     connect(networkManager, &QNetworkAccessManager::finished, this, &func_weather::onSecondWeatherDataReceived);
     networkManager->get(request2);
@@ -186,17 +189,54 @@ void func_weather::onWeatherDataReceived(QNetworkReply *reply)
 
                 QPixmap weatherIcon(iconPath);
                 ui->icon->setPixmap(weatherIcon);
+
+                ui->chartView->setChart(chart);
+
+                chart->addSeries(seriesHigh);
+                chart->addSeries(seriesLow);
+
+                chart->createDefaultAxes();
+                seriesHigh->clear();
+                seriesLow->clear();
+                // 设置X轴和Y轴
+                QValueAxis *axisY = new QValueAxis;
+                chart->setAxisY(axisY, seriesHigh);
+                chart->setAxisY(axisY, seriesLow);
+
+                QCategoryAxis *axisX = new QCategoryAxis;
+                chart->setAxisX(axisX, seriesHigh);
+                chart->setAxisX(axisX, seriesLow);
+
+                for (int i = 0; i < dailyArray.size(); ++i) {
+                    QJsonObject dayWeather = dailyArray[i].toObject();
+                    QString date = dayWeather["date"].toString();
+                    qreal highTemp = dayWeather["high"].toString().toDouble();
+                    qreal lowTemp = dayWeather["low"].toString().toDouble();
+
+                    // 添加数据点到折线图
+                    seriesHigh->append(i, highTemp);
+                    seriesLow->append(i, lowTemp);
+
+                    ui->chartView->chart()->axisX()->setRange(0, dailyArray.size() - 1);
+                    ui->chartView->chart()->axisY()->setRange(0, 35); // 假设温度范围在0-35之间
+
+                    // 设置X轴标签
+                    QCategoryAxis *axisX = static_cast<QCategoryAxis *>(chart->axisX());
+                    axisX->append(date, i);
             }
-        }
+
+            }
         }
     }
     else
     {
         // 处理错误
-        ui->weatherLabel->setText("Error: " + reply->errorString());
+        qDebug() << "Error: " << reply->errorString();
     }
     reply->deleteLater();
 }
+}
+
 
 void func_weather::onSecondWeatherDataReceived(QNetworkReply *reply)
 {
