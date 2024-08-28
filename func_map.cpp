@@ -32,6 +32,11 @@ func_map::func_map(QWidget *parent) :
         }
     });
 
+    connect(ui->pushButton_refreshMapData, &QPushButton::clicked, [mapItem]() {
+        QObject *mapObject = mapItem->findChild<QQuickItem*>("mapObject");
+        QMetaObject::invokeMethod(mapObject, "refreshMap");
+    });
+
 }
 
 func_map::~func_map()

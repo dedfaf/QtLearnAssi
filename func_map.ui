@@ -75,6 +75,13 @@
        </layout>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton_refreshMapData">
+        <property name="text">
+         <string>Refresh Map</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -94,10 +101,13 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Preferred</enum>
+      </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>40</width>
-        <height>20</height>
+        <width>10</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
