@@ -1,13 +1,4 @@
-QT += core gui multimedia
-QT += core gui widgets
-QT += multimedia multimediawidgets
-QT += core gui widgets multimedia multimediawidgets
-QT += quickwidgets
-QT += location
-QT += network
-
-QT += core gui network
-QT += core gui charts
+QT += core gui multimedia multimediawidgets widgets quickwidgets location network charts
 
 RESOURCES += icon.qrc
 

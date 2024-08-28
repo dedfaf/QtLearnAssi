@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stackedWidget_func->insertWidget(1, videoPlayer);
 
     // Default Stack
-    ui->stackedWidget_func->setCurrentIndex(4);
+    ui->stackedWidget_func->setCurrentIndex(5);
 
     qInfo() << ui->stackedWidget_func->currentIndex();
     qDebug() << QSslSocket::sslLibraryBuildVersionString();
