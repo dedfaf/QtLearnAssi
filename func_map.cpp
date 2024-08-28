@@ -132,6 +132,31 @@ void func_map::on_pushButton_moveTo_clicked()
     }
 }
 
+void func_map::on_pushButton_addMark_clicked()
+{
+    QQuickItem *mapItem = ui->quickWidget_mainMap->rootObject();
+    QObject *mapObject = mapItem->findChild<QQuickItem*>("mapObject");
+
+    QItemSelectionModel *selectionModel = ui->listView_locResult->selectionModel();
+    QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+
+    int currentRow;
+
+    foreach (const QModelIndex &index, selectedIndexes) {
+        currentRow = index.row();
+        qDebug() << "Selected row:" << currentRow ;
+    }
+
+    if (!selectedIndexes.isEmpty()) {
+//        QVariantList coordinate;
+//        coordinate << locResultData[currentRow].first << locResultData[currentRow].second;
+
+        QMetaObject::invokeMethod(mapObject, "addMarker", Q_ARG(QVariant, locResultData[currentRow].first), Q_ARG(QVariant, locResultData[currentRow].second));
+    } else {
+        qDebug() << "No item is selected.";
+    }
+}
+
 void func_map::on_Reply_Finished(QNetworkReply *reply)
 {
     QByteArray replyJson = reply->readAll();
