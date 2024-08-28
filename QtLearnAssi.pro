@@ -1,4 +1,5 @@
 QT += core gui multimedia multimediawidgets widgets quickwidgets location network charts
+QT += core gui webenginewidgets
 
 RESOURCES += icon.qrc
 
@@ -18,6 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    func_browser.cpp \
     func_image.cpp \
     func_map.cpp \
     func_music.cpp \
@@ -28,6 +30,7 @@ SOURCES += \
     timedisplay.cpp
 
 HEADERS += \
+    func_browser.h \
     func_image.h \
     func_map.h \
     func_music.h \
@@ -37,6 +40,7 @@ HEADERS += \
     timedisplay.h
 
 FORMS += \
+    func_browser.ui \
     func_image.ui \
     func_map.ui \
     func_music.ui \
