@@ -7,24 +7,21 @@
 #include <QHostAddress>
 
 ChatWindow::ChatWindow(QWidget *parent) :
-    QMainWindow(parent),
+    QWidget(parent),
     udpSocket(new QUdpSocket(this)),
     port(12345)  // 设置端口号为12345
 {
     // 创建 UI 组件
-    QWidget *centralWidget = new QWidget(this);
-    setCentralWidget(centralWidget);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
-
-    textEditChat = new QTextEdit(centralWidget);
+    textEditChat = new QTextEdit(this);
     textEditChat->setReadOnly(true);  // 设置为只读
     layout->addWidget(textEditChat);
 
-    lineEditMessage = new QLineEdit(centralWidget);
+    lineEditMessage = new QLineEdit(this);
     layout->addWidget(lineEditMessage);
 
-    sendButton = new QPushButton("Send", centralWidget);
+    sendButton = new QPushButton("Send", this);
     layout->addWidget(sendButton);
 
     // 绑定端口号，以便接收数据
@@ -42,6 +39,8 @@ ChatWindow::~ChatWindow()
     delete lineEditMessage;
     delete textEditChat;
 }
+
+
 
 void ChatWindow::on_sendButton_clicked()
 {

@@ -7,7 +7,7 @@
 #include <QTextEdit>
 #include <QPushButton>
 
-class ChatWindow : public QMainWindow
+class ChatWindow : public QWidget
 {
     Q_OBJECT
 

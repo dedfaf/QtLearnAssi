@@ -3,6 +3,7 @@
 #include "ui_mainwindow.h"
 #include "func_music.h"
 #include "func_video.h"
+#include "chatwindow.h"
 #include <QNetworkReply>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,6 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     func_video *videoPlayer = new func_video(this);
     ui->stackedWidget_func->widget(1)->deleteLater();
     ui->stackedWidget_func->insertWidget(1, videoPlayer);
+
+    ChatWindow *chatWindow = new ChatWindow(this);
+    ui->stackedWidget_func->widget(6)->deleteLater(); // 删除原来的页面（假设存在）
+    ui->stackedWidget_func->insertWidget(6, chatWindow); // 插入即时通讯模块
 
     // Default Stack
     ui->stackedWidget_func->setCurrentIndex(5);
