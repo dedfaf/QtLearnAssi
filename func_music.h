@@ -8,6 +8,8 @@
 #include <QPushButton>
 #include <QSlider>
 #include <QListWidget>
+#include <QVector>
+#include <QPair>
 
 class func_Music : public QWidget
 {
@@ -16,6 +18,7 @@ class func_Music : public QWidget
 public:
     explicit func_Music(QWidget *parent = nullptr);
     ~func_Music();
+    QString formatTime(qint64 duration);
 
 private slots:
     void togglePlayPause();
@@ -29,7 +32,12 @@ private slots:
     void updateLyric();
     void loadMusicFiles();
     void showPlaylist();
-    void shufflePlaylist();  // 在头文件中声明 shufflePlaylist 函数
+    void shufflePlaylist();  // 声明 shufflePlaylist 函数
+    void onMediaStatusChanged(QMediaPlayer::MediaStatus status); // 新增槽函数
+    void onSeekBarValueChanged(int value);
+
+    void addToFavorites();  // 添加当前播放的歌曲到收藏夹
+    void showFavorites();   // 显示收藏夹中的歌曲列表
 
 private:
     QMediaPlayer *mediaPlayer;
@@ -46,7 +54,15 @@ private:
     QPushButton *musicSelectionButton;
     QPushButton *changePlayModeButton;
     QPushButton *viewPlaylistButton;
+    QPushButton *addToFavoritesButton;
+    QPushButton *viewFavoritesButton;
     QListWidget *musicListWidget;
+    QLabel *currentTimeLabel;
+    QLabel *totalTimeLabel;
+
+    QList<QString> favoriteSongs; // 删除了原有的 favoritesList 变量
+    QVector<QPair<qint64, QString>> lyrics; // 存储歌词
+    int currentLyricIndex; // 当前歌词索引
 
     enum PlayMode {
         Loop,
@@ -56,10 +72,10 @@ private:
 
     PlayMode currentPlayMode;
 
-    QVector<QPair<qint64, QString>> lyrics;
-    int currentLyricIndex;
-
     void updateSongInfo();
+    void handleRandomPlayback();  // 新函数处理随机播放
+    void setupUi(); // 新增函数声明
+    void connectSignals(); // 新增函数声明
 };
 
 #endif // FUNC_MUSIC_H

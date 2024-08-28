@@ -12,19 +12,29 @@
 #include <QMessageBox>
 #include <QListWidget>
 #include <QTime>
-#include <algorithm> // 添加这个头文件用于 std::random_shuffle
+#include <algorithm> // 用于 std::random_shuffle
 
 func_Music::func_Music(QWidget *parent)
     : QWidget(parent),
       mediaPlayer(new QMediaPlayer(this)),
       playlist(new QMediaPlaylist(this)),
       currentLyricIndex(0),
-      currentPlayMode(Loop)  // 默认播放模式设置为 Loop
+      currentPlayMode(Loop)
 {
-    // 初始化 UI 组件
+    setupUi();
+    connectSignals();
     mediaPlayer->setPlaylist(playlist);
+    playlist->setCurrentIndex(0);
+}
 
-    // 创建UI元素
+func_Music::~func_Music()
+{
+    delete mediaPlayer;
+    delete playlist;
+}
+
+void func_Music::setupUi()
+{
     musicImageView = new QLabel(this);
     songTitleLabel = new QLabel("Song Title", this);
     artistLabel = new QLabel("Artist", this);
@@ -36,32 +46,49 @@ func_Music::func_Music(QWidget *parent)
     downloadButton = new QPushButton("Download Song", this);
     musicSelectionButton = new QPushButton("Select Music", this);
     changePlayModeButton = new QPushButton("Play Mode: Loop", this);
-    viewPlaylistButton = new QPushButton("View Playlist", this); // 新增查看播放列表按钮
+    viewPlaylistButton = new QPushButton("View Playlist", this);
+    addToFavoritesButton = new QPushButton("Add to Favorites", this);
+    viewFavoritesButton = new QPushButton("View Favorites", this);
     musicListWidget = new QListWidget(this);
+    currentTimeLabel = new QLabel("00:00", this);
+    totalTimeLabel = new QLabel("00:00", this);
 
-    // 设置布局
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(musicImageView);
     mainLayout->addWidget(songTitleLabel);
     mainLayout->addWidget(artistLabel);
     mainLayout->addWidget(seekBar);
 
+    // Layout for time labels
+    QHBoxLayout *timeLayout = new QHBoxLayout;
+    timeLayout->addWidget(currentTimeLabel);
+    timeLayout->addStretch(); // To push totalTimeLabel to the right
+    timeLayout->addWidget(totalTimeLabel);
+
+    // Layout for controls and buttons
     QHBoxLayout *controlLayout = new QHBoxLayout;
     controlLayout->addWidget(prevButton);
     controlLayout->addWidget(playPauseButton);
     controlLayout->addWidget(nextButton);
-    mainLayout->addLayout(controlLayout);
 
+    // Add controls and buttons to the main layout
+    mainLayout->addLayout(controlLayout);
+    mainLayout->addLayout(timeLayout); // Add time layout below seekBar
     mainLayout->addWidget(lyricLabel);
     mainLayout->addWidget(downloadButton);
     mainLayout->addWidget(musicSelectionButton);
     mainLayout->addWidget(changePlayModeButton);
-    mainLayout->addWidget(viewPlaylistButton);  // 添加查看播放列表按钮到布局
+    mainLayout->addWidget(viewPlaylistButton);
+    mainLayout->addWidget(addToFavoritesButton);
+    mainLayout->addWidget(viewFavoritesButton);
     mainLayout->addWidget(musicListWidget);
 
     setLayout(mainLayout);
+}
 
-    // 连接信号和槽
+
+void func_Music::connectSignals()
+{
     connect(playPauseButton, &QPushButton::clicked, this, &func_Music::togglePlayPause);
     connect(prevButton, &QPushButton::clicked, this, &func_Music::playPreviousSong);
     connect(nextButton, &QPushButton::clicked, this, &func_Music::playNextSong);
@@ -70,22 +97,24 @@ func_Music::func_Music(QWidget *parent)
     });
     connect(musicSelectionButton, &QPushButton::clicked, this, &func_Music::on_selectMusicButton_clicked);
     connect(changePlayModeButton, &QPushButton::clicked, this, &func_Music::changePlayMode);
-    connect(viewPlaylistButton, &QPushButton::clicked, this, &func_Music::showPlaylist);  // 连接查看播放列表按钮的信号槽
+    connect(viewPlaylistButton, &QPushButton::clicked, this, &func_Music::showPlaylist);
+    connect(addToFavoritesButton, &QPushButton::clicked, this, &func_Music::addToFavorites);
+    connect(viewFavoritesButton, &QPushButton::clicked, this, &func_Music::showFavorites);
 
     connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &func_Music::updateSeekBar);
     connect(mediaPlayer, &QMediaPlayer::durationChanged, this, [=](qint64 duration) {
         seekBar->setMaximum(duration);
+
+        // 更新总时间标签
+        totalTimeLabel->setText(formatTime(duration));
     });
+    connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &func_Music::onMediaStatusChanged);
 
-    // 初始化播放列表为空
-    playlist->setCurrentIndex(0);
+    connect(seekBar, &QSlider::sliderReleased, this, [=]() {
+        onSeekBarValueChanged(seekBar->value());
+    });
 }
 
-func_Music::~func_Music()
-{
-    delete mediaPlayer;
-    delete playlist;
-}
 
 void func_Music::togglePlayPause()
 {
@@ -98,30 +127,10 @@ void func_Music::togglePlayPause()
     }
 }
 
-void func_Music::playPreviousSong()
+void func_Music::onSeekBarValueChanged(int value)
 {
-    if (playlist->mediaCount() > 0) {
-        playlist->previous();
-        mediaPlayer->play();
-        updateSongInfo();
-    }
-}
-
-void func_Music::playNextSong()
-{
-    if (playlist->mediaCount() > 0) {
-        playlist->next();
-        mediaPlayer->play();
-        updateSongInfo();
-    }
-}
-
-void func_Music::updateSongInfo()
-{
-    int currentIndex = playlist->currentIndex();
-    if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
-        QString currentSong = musicListWidget->item(currentIndex)->text();
-        songTitleLabel->setText(QFileInfo(currentSong).baseName());
+    if (mediaPlayer->state() == QMediaPlayer::PlayingState) {
+        mediaPlayer->setPosition(value);  // 设置媒体播放器的当前位置
     }
 }
 
@@ -130,11 +139,24 @@ void func_Music::updateSeekBar()
     qint64 currentPosition = mediaPlayer->position();
     seekBar->setValue(currentPosition);
 
+    // 更新当前时间标签
+    QTime currentTime((currentPosition / 3600000) % 60, (currentPosition / 60000) % 60, (currentPosition / 1000) % 60);
+    currentTimeLabel->setText(currentTime.toString("mm:ss"));
+
     while (currentLyricIndex < lyrics.size() && lyrics[currentLyricIndex].first <= currentPosition) {
         lyricLabel->setText(lyrics[currentLyricIndex].second);
         ++currentLyricIndex;
     }
 }
+
+QString func_Music::formatTime(qint64 duration)
+{
+    int minutes = (duration / 60000);  // 将毫秒转换为分钟
+    int seconds = (duration % 60000) / 1000;  // 取余数并转换为秒
+    return QString::asprintf("%02d:%02d", minutes, seconds);
+}
+
+
 
 void func_Music::loadLyrics(const QString &lyricPath)
 {
@@ -168,9 +190,40 @@ void func_Music::updateLyric()
     }
 }
 
+void func_Music::playNextSong()
+{
+    int currentIndex = playlist->currentIndex();
+    int nextIndex = (currentIndex + 1) % playlist->mediaCount(); // 循环播放
+    playlist->setCurrentIndex(nextIndex);
+    mediaPlayer->play();
+    updateSongInfo();
+}
+
+void func_Music::playPreviousSong()
+{
+    int currentIndex = playlist->currentIndex();
+    int previousIndex = (currentIndex - 1 + playlist->mediaCount()) % playlist->mediaCount(); // 循环播放
+    playlist->setCurrentIndex(previousIndex);
+    mediaPlayer->play();
+    updateSongInfo();
+}
+
+
+
 void func_Music::on_selectMusicButton_clicked()
 {
     loadMusicFiles();
+
+    QStringList musicFiles;
+    for (int i = 0; i < musicListWidget->count(); ++i) {
+        musicFiles << musicListWidget->item(i)->text();
+    }
+
+    if (!musicFiles.isEmpty()) {
+        QMessageBox::information(this, "Scanned Songs", "Scanned Songs:\n" + musicFiles.join("\n"));
+    } else {
+        QMessageBox::information(this, "No Music Files", "No MP3 files found on the USB drive.");
+    }
 }
 
 void func_Music::loadMusicFiles()
@@ -211,7 +264,7 @@ void func_Music::loadMusicFiles()
     }
     playlist->setCurrentIndex(0);  // 确保播放列表从第一首歌开始
 
-    connect(musicListWidget, &QListWidget::itemClicked, [this](QListWidgetItem *item) {
+    connect(musicListWidget, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
         int index = musicListWidget->row(item);
         playlist->setCurrentIndex(index);
         mediaPlayer->play();
@@ -229,8 +282,8 @@ void func_Music::changePlayMode()
         break;
     case SingleLoop:
         currentPlayMode = Random;
-        playlist->setPlaybackMode(QMediaPlaylist::Random);
-        shufflePlaylist();  // 当模式切换到 Random 时调用随机化函数
+        playlist->setPlaybackMode(QMediaPlaylist::Sequential);  // 在 Random 模式下，播放模式仍设为 Sequential
+        // 不立即打乱播放列表，而是在当前歌曲播放完毕后再处理
         break;
     case Random:
         currentPlayMode = Loop;
@@ -278,12 +331,76 @@ void func_Music::updatePlayModeButtonText()
 
 void func_Music::showPlaylist()
 {
+    musicListWidget->clear();  // 清空当前列表
     QStringList playlistItems;
     for (int i = 0; i < playlist->mediaCount(); ++i) {
         QUrl mediaUrl = playlist->media(i).canonicalUrl();
         playlistItems << mediaUrl.toLocalFile();  // 将文件路径添加到列表中
     }
 
-    // 弹出消息框显示播放列表
-    QMessageBox::information(this, "Playlist", "Current Playlist:\n" + playlistItems.join("\n"));
+    musicListWidget->addItems(playlistItems);  // 将播放列表显示在列表控件中
 }
+
+void func_Music::addToFavorites()
+{
+    int currentIndex = playlist->currentIndex();
+    if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
+        QString currentSong = musicListWidget->item(currentIndex)->text();
+        if (!favoriteSongs.contains(currentSong)) {
+            favoriteSongs.append(currentSong);
+            QMessageBox::information(this, "Added to Favorites", "Song added to favorites.");
+        } else {
+            QMessageBox::information(this, "Already in Favorites", "Song is already in your favorites.");
+        }
+    }
+}
+
+void func_Music::showFavorites()
+{
+    musicListWidget->clear();  // 清空当前列表
+    if (favoriteSongs.isEmpty()) {
+        musicListWidget->addItem("No favorite songs yet.");
+    } else {
+        musicListWidget->addItems(favoriteSongs);  // 显示收藏夹中的歌曲
+    }
+}
+
+void func_Music::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
+{
+    if (status == QMediaPlayer::EndOfMedia) {
+        if (currentPlayMode == SingleLoop) {
+            mediaPlayer->play();  // 在 SingleLoop 模式下，自动重播当前歌曲
+        } else if (currentPlayMode == Random) {
+            shufflePlaylist();  // 在 Random 模式下，重新打乱播放列表
+            playNextSong();  // 播放下一首歌曲
+            showPlaylist();  // 自动显示播放列表
+        }
+    }
+    // 更新歌曲信息
+    updateSongInfo();
+}
+
+void func_Music::updateSongInfo()
+{
+    int currentIndex = playlist->currentIndex();
+    if (currentIndex >= 0 && currentIndex < musicListWidget->count()) {
+        QString currentSong = musicListWidget->item(currentIndex)->text();
+        songTitleLabel->setText(QFileInfo(currentSong).baseName()); // 显示歌曲标题（不包含扩展名）
+        artistLabel->setText("Artist Unknown"); // 这里可以根据实际情况设置艺术家信息
+
+        // 设置音乐封面图片，假设图片名称与音乐文件相同，路径为 musicImages 文件夹
+        QFileInfo fileInfo(currentSong);
+        QString imagePath = QString("musicImages/%1.jpg").arg(fileInfo.baseName());
+        QPixmap pixmap(imagePath);
+        if (!pixmap.isNull()) {
+            musicImageView->setPixmap(pixmap);
+        } else {
+            musicImageView->clear(); // 如果没有找到图片，则清空显示
+        }
+    } else {
+        songTitleLabel->setText("No Song Playing");
+        artistLabel->setText("");
+        musicImageView->clear();
+    }
+}
+
