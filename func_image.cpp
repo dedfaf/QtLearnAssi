@@ -128,8 +128,8 @@ func_image::~func_image()
 
 void func_image::loadImages()
 {
-   QDir directory("/home/user/桌面/test");  // 替换为实际的图像文件夹路径
-   QStringList images = directory.entryList(QStringList() << "*.jpg" << "*.png", QDir::Files);
+   QDir directory("D:/Daily/#2024/8-28");  // 替换为实际的图像文件夹路径
+   QStringList images = directory.entryList(QStringList() << "*.jpg" << "*.png" << "*.gif" << "*.webp" << "*.bmp", QDir::Files);
    foreach(QString filename, images) {
        QListWidgetItem *item = new QListWidgetItem(QIcon(directory.path() + "/" + filename), filename);
        item->setData(Qt::UserRole, directory.path() + "/" + filename);  // 保存图像路径
