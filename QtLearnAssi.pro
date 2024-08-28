@@ -22,6 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    func_image.cpp \
     func_music.cpp \
     func_video.cpp \
     main.cpp \
@@ -29,12 +30,14 @@ SOURCES += \
     timedisplay.cpp
 
 HEADERS += \
+    func_image.h \
     func_music.h \
     func_video.h \
     mainwindow.h \
     timedisplay.h
 
 FORMS += \
+    func_image.ui \
     func_music.ui \
     func_video.ui \
     mainwindow.ui \
