@@ -37,7 +37,7 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_1">
      <property name="sizeConstraint">
-      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+      <enum>QLayout::SetDefaultConstraint</enum>
      </property>
      <item>
       <layout class="QVBoxLayout" name="vLayout_funcSelect">
@@ -106,7 +106,7 @@
          <item>
           <widget class="QStackedWidget" name="stackedWidget_func">
            <property name="currentIndex">
-            <number>3</number>
+            <number>4</number>
            </property>
            <widget class="QWidget" name="page_music">
             <widget class="func_Music" name="widget" native="true">
@@ -151,7 +151,7 @@
             </widget>
            </widget>
            <widget class="func_weather" name="page_weather"/>
-           <widget class="QWidget" name="page_map">
+           <widget class="func_map" name="page_map">
             <widget class="QLabel" name="label_4">
              <property name="geometry">
               <rect>
@@ -211,7 +211,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
@@ -231,13 +231,20 @@
    <container>1</container>
   </customwidget>
   <customwidget>
+   <class>func_map</class>
+   <extends>QWidget</extends>
+   <header location="global">func_map.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>func_image</class>
    <extends>QWidget</extends>
-   <header location="global">func_image.h</header>
+   <header>func_image.h</header>
+  </customwidget>
+  <customwidget>
    <class>func_weather</class>
    <extends>QWidget</extends>
-   <header location="global">func_weather.h</header>
-   <container>1</container>
+   <header>func_weather.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

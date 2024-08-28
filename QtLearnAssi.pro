@@ -2,6 +2,9 @@ QT += core gui multimedia
 QT += core gui widgets
 QT += multimedia multimediawidgets
 QT += core gui widgets multimedia multimediawidgets
+QT += quickwidgets
+QT += location
+QT += network
 
 QT += core gui network
 QT += core gui charts
@@ -25,6 +28,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     func_image.cpp \
+    func_map.cpp \
     func_music.cpp \
     func_video.cpp \
     func_weather.cpp \
@@ -34,6 +38,7 @@ SOURCES += \
 
 HEADERS += \
     func_image.h \
+    func_map.h \
     func_music.h \
     func_video.h \
     func_weather.h \
@@ -42,6 +47,7 @@ HEADERS += \
 
 FORMS += \
     func_image.ui \
+    func_map.ui \
     func_music.ui \
     func_video.ui \
     func_weather.ui \
@@ -137,3 +143,7 @@ DISTFILES += \
 
 RESOURCES += \
     icon.qrc
+    Map.qml
+
+RESOURCES += \
+    Qml.qrc
