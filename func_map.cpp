@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QQuickItem>
+#include <QItemSelectionModel>
 
 func_map::func_map(QWidget *parent) :
     QWidget(parent),
@@ -41,7 +42,8 @@ func_map::func_map(QWidget *parent) :
 
     ui->listView_locResult->setModel(locResult_model);
 
-    // Assuming locResult_model is properly initialized somewhere
+    // Connect the move to button
+    connect(ui->pushButton_moveTo, &QPushButton::clicked, this, &func_map::on_pushButton_moveTo_clicked);
 }
 
 func_map::~func_map()
@@ -56,6 +58,7 @@ QStringList func_map::parseGeocodeJson(QByteArray jsonString)
 
     QJsonArray featuresArray = jsonObj["features"].toArray();
     QStringList list;
+    locResultData.clear(); // Clear previous data
 
     qDebug() << "Parsing JSON response...";
     qDebug() << featuresArray;
@@ -66,13 +69,20 @@ QStringList func_map::parseGeocodeJson(QByteArray jsonString)
 
         QString address = propertiesObj["full_address"].toString();
         QString name = propertiesObj["name_preferred"].toString();
+//        QString latitude = propertiesObj["lat"].toString();
+//        QString longitude = propertiesObj["lon"].toString();
+        QJsonObject coordinates = propertiesObj["coordinates"].toObject();
+        double latitude = coordinates["latitude"].toDouble();
+        double longitude = coordinates["longitude"].toDouble();
 
         qDebug() << featureObj;
 
         list << name;
+        locResultData.append(QPair<double, double>(latitude, longitude)); // Store latitude and longitude
     }
 
     qDebug() << list;
+    qDebug() << locResultData;
     return list;
 }
 
@@ -93,6 +103,33 @@ void func_map::on_pushButton_locSearch_clicked()
         qDebug() << "Reply finished";
         on_Reply_Finished(reply);
     });
+}
+
+void func_map::on_pushButton_moveTo_clicked()
+{
+    QQuickItem *mapItem = ui->quickWidget_mainMap->rootObject();
+    QObject *mapObject = mapItem->findChild<QQuickItem*>("mapObject");
+
+    QItemSelectionModel *selectionModel = ui->listView_locResult->selectionModel();
+    QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+
+    int currentRow;
+
+    foreach (const QModelIndex &index, selectedIndexes) {
+        currentRow = index.row();
+        qDebug() << "Selected row:" << currentRow ;
+    }
+
+    if (!selectedIndexes.isEmpty()) {
+        qDebug() << "Latitude:" << locResultData[currentRow].first;
+        qDebug() << "Longitude:" << locResultData[currentRow].second;
+//        QVariantList coordinate;
+//        coordinate << locResultData[currentRow].first << locResultData[currentRow].second;
+
+        QMetaObject::invokeMethod(mapObject, "moveTo", Q_ARG(QVariant, locResultData[currentRow].first), Q_ARG(QVariant, locResultData[currentRow].second));
+    } else {
+        qDebug() << "No item is selected.";
+    }
 }
 
 void func_map::on_Reply_Finished(QNetworkReply *reply)

@@ -28,11 +28,16 @@ Item {
             zoomLevel: 13.95
 
             function getMapType(index) {
-                return supportedMapTypes[index];
+                return supportedMapTypes[index]
             }
 
             function refreshMap() {
                 mapObject.clearData();
+            }
+
+            function moveTo (la, lo) {
+                mapObject.center = QtPositioning.coordinate(la, lo)
+                console.log("moving cam to " + la + lo)
             }
 
             MapQuickItem {
