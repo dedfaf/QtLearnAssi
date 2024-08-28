@@ -2,17 +2,25 @@
 #define FUNC_BROWSER_H
 
 #include <QWidget>
-#include <QWebEngineView>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QVBoxLayout>
+#include <QWebEngineView>
 
-class func_browser : public QWidget {
+class func_browser : public QWidget
+{
     Q_OBJECT
 
 public:
     explicit func_browser(QWidget *parent = nullptr);
 
+private slots:
+    void loadPage();
+
 private:
-    QWebEngineView *webView;  // 网页视图
+    QLineEdit *searchBar;
+    QWebEngineView *webView;
+    QPushButton *searchButton;
 };
 
 #endif // FUNC_BROWSER_H

@@ -3,6 +3,7 @@
 #include "ui_mainwindow.h"
 #include "func_music.h"
 #include "func_video.h"
+#include "func_browser.h"
 #include <QNetworkReply>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,6 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     func_video *videoPlayer = new func_video(this);
     ui->stackedWidget_func->widget(1)->deleteLater();
     ui->stackedWidget_func->insertWidget(1, videoPlayer);
+    
+    func_browser *browser = new func_browser(this);
+    ui->stackedWidget_func->widget(7)->deleteLater();  // 删除原来的第6个空白页面
+    ui->stackedWidget_func->insertWidget(7, browser);  // 插入浏览器页面到第6个位置
 
     // Default Stack
     ui->stackedWidget_func->setCurrentIndex(5);
