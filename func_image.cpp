@@ -143,14 +143,27 @@ void func_image::showPreviousImage()
 
 void func_image::zoomIn()
 {
-   scaleFactor *= 1.25;
-   imageLabel->setPixmap(originalPixmap.scaled(originalPixmap.size() * scaleFactor, Qt::KeepAspectRatio));
+// 获取当前显示图片的尺寸
+    QSize currentSize = imageLabel->pixmap()->size();
+    QSize newSize = currentSize * 1.25;
+
+    // 限制最大放大倍数为原始图片的4倍
+    if (newSize.width() <= originalPixmap.size().width() * 4 &&
+        newSize.height() <= originalPixmap.size().height() * 4) {
+        imageLabel->setPixmap(originalPixmap.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    } else {
+        // 如果超出限制，则使用最大允许大小
+        newSize = originalPixmap.size() * 4;
+        imageLabel->setPixmap(originalPixmap.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
 }
 
 void func_image::zoomOut()
 {
-   scaleFactor *= 0.8;
-   imageLabel->setPixmap(originalPixmap.scaled(originalPixmap.size() * scaleFactor, Qt::KeepAspectRatio));
+// 获取当前显示图片的尺寸
+   QSize currentSize = imageLabel->pixmap()->size();
+   QSize newSize = currentSize * 0.8;
+   imageLabel->setPixmap(originalPixmap.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void func_image::rotateLeft()
