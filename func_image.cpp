@@ -21,71 +21,104 @@ func_image::func_image(QWidget *parent) :
     ui->setupUi(this);
 
 // 初始化列表和显示区域
-   listWidget = new QListWidget(this);
-   imageLabel = new QLabel(this);
-   imageLabel->setAlignment(Qt::AlignCenter);
-   imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-   imageLabel->setScaledContents(false);
+    listWidget = new QListWidget(this);
+    imageLabel = new QLabel(this);
+    imageLabel->setAlignment(Qt::AlignCenter);
+    imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    imageLabel->setScaledContents(false);
 
-   // 初始化工具栏
-   toolBar = new QToolBar(this);
-   QAction *zoomInAction = toolBar->addAction("Zoom In");
-   QAction *zoomOutAction = toolBar->addAction("Zoom Out");
-   QAction *rotateLeftAction = toolBar->addAction("Rotate Left");
-   QAction *rotateRightAction = toolBar->addAction("Rotate Right");
+// 为图片显示区添加隔离框
+    QFrame *imageFrame = new QFrame(this);
+    imageFrame->setFrameShape(QFrame::StyledPanel);  // 设置为面板样式
+    imageFrame->setLineWidth(2);  // 设置线宽
+    imageFrame->setContentsMargins(0, 0, 0, 0);  // 设置内容边距
 
-   // 连接工具栏按钮的信号与槽
-   connect(zoomInAction, &QAction::triggered, this, &func_image::zoomIn);
-   connect(zoomOutAction, &QAction::triggered, this, &func_image::zoomOut);
-   connect(rotateLeftAction, &QAction::triggered, this, &func_image::rotateLeft);
-   connect(rotateRightAction, &QAction::triggered, this, &func_image::rotateRight);
+// 设置样式表来确保边框可见
+    imageFrame->setStyleSheet("QFrame { border: 2px solid black; padding: 5px; }");
 
-   // 左右图片切换按钮
-   QPushButton *prevButton = new QPushButton("<", this);
-   QPushButton *nextButton = new QPushButton(">", this);
-   prevButton->setFixedSize(50, 50);
-   nextButton->setFixedSize(50, 50);
+// 使用布局管理 imageLabel 和 imageFrame
+    QVBoxLayout *imageFrameLayout = new QVBoxLayout(imageFrame);
+    imageFrameLayout->addWidget(imageLabel);
+    imageFrame->setLayout(imageFrameLayout);
 
-   connect(prevButton, &QPushButton::clicked, this, &func_image::showPreviousImage);
-   connect(nextButton, &QPushButton::clicked, this, &func_image::showNextImage);
+// 初始化工具栏按钮
+    QPushButton *zoomInButton = new QPushButton("Zoom In", this);
+    QPushButton *zoomOutButton = new QPushButton("Zoom Out", this);
+    QPushButton *rotateLeftButton = new QPushButton("Rotate Left", this);
+    QPushButton *rotateRightButton = new QPushButton("Rotate Right", this);
 
-   // 状态栏用于显示当前文件名和图片序号
-   QStatusBar *statusBar = new QStatusBar(this);
-   statusBar->setSizeGripEnabled(false);  // 禁止调整窗口大小
-   QLabel *statusLabel = new QLabel(this);
-   statusBar->addWidget(statusLabel);
+// 连接工具栏按钮的信号与槽
+    connect(zoomInButton, &QPushButton::clicked, this, &func_image::zoomIn);
+    connect(zoomOutButton, &QPushButton::clicked, this, &func_image::zoomOut);
+    connect(rotateLeftButton, &QPushButton::clicked, this, &func_image::rotateLeft);
+    connect(rotateRightButton, &QPushButton::clicked, this, &func_image::rotateRight);
 
-   // 布局
-   QVBoxLayout *mainLayout = new QVBoxLayout(this);
-   QHBoxLayout *imageLayout = new QHBoxLayout();
-   QHBoxLayout *bottomLayout = new QHBoxLayout();
+// 创建用于工具栏按钮的水平布局，并均匀分布按钮
+    QHBoxLayout *toolBarLayout = new QHBoxLayout();
+    toolBarLayout->addWidget(zoomInButton);
+    toolBarLayout->addWidget(zoomOutButton);
+    toolBarLayout->addWidget(rotateLeftButton);
+    toolBarLayout->addWidget(rotateRightButton);
 
-   // 添加工具栏到主布局
-   mainLayout->addWidget(toolBar);
+// 左右图片切换按钮
+    QPushButton *prevButton = new QPushButton("<", this);
+    QPushButton *nextButton = new QPushButton(">", this);
+    prevButton->setFixedSize(50, 50);
+    nextButton->setFixedSize(50, 50);
 
-   // 设置图片显示区布局
-   imageLayout->addWidget(prevButton);
-   imageLayout->addWidget(imageLabel);
-   imageLayout->addWidget(nextButton);
-   mainLayout->addLayout(imageLayout);
+    connect(prevButton, &QPushButton::clicked, this, &func_image::showPreviousImage);
+    connect(nextButton, &QPushButton::clicked, this, &func_image::showNextImage);
 
-   // 缩略图列表在底部
-   bottomLayout->addWidget(listWidget);
-   mainLayout->addLayout(bottomLayout);
+// 状态栏用于显示当前文件名和图片序号
+    QStatusBar *statusBar = new QStatusBar(this);
+    statusBar->setSizeGripEnabled(false);  // 禁止调整窗口大小
+    QLabel *statusLabel = new QLabel(this);
+    statusBar->addWidget(statusLabel);
 
-   // 添加状态栏
-   mainLayout->addWidget(statusBar);
+// 设置缩略图列表的固定大小
+    listWidget->setFixedSize(120, 380);
 
-   setLayout(mainLayout);
+// 布局
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QHBoxLayout *imageLayout = new QHBoxLayout();
+    QHBoxLayout *buttonLayout = new QHBoxLayout();  // 用于底部按钮的布局
+    QHBoxLayout *statusLayout = new QHBoxLayout();  // 用于状态栏的布局
+    QVBoxLayout *leftLayout = new QVBoxLayout();  // 左侧布局，包括缩略图列表和工具栏
 
-   // 加载图片
-   loadImages();
 
-   // 连接列表点击信号
-   connect(listWidget, &QListWidget::itemClicked, this, &func_image::showImage);
+// 将缩略图列表放在左侧
+    leftLayout->addWidget(listWidget);
 
-   // 设置初始状态栏文本
-   statusLabel->setText("当前文件名： 无");
+// 在主布局中添加左侧布局和图片显示区
+    imageLayout->addLayout(leftLayout);
+    imageLayout->addWidget(imageFrame);
+
+// 将工具栏布局放在图片显示区上方
+    mainLayout->addLayout(toolBarLayout); // 添加工具栏布局
+    mainLayout->addLayout(imageLayout);
+
+// 将左右图片切换按钮和状态栏放在图片显示区下面
+    buttonLayout->addWidget(prevButton);
+    buttonLayout->addStretch();  // 使按钮均匀分布
+    buttonLayout->addWidget(nextButton);
+
+// 添加状态栏到状态布局
+    statusLayout->addWidget(statusBar);
+
+// 设置主布局
+    mainLayout->addLayout(buttonLayout);
+    mainLayout->addLayout(statusLayout);
+
+    setLayout(mainLayout);
+
+// 加载图片
+    loadImages();
+
+// 连接列表点击信号
+    connect(listWidget, &QListWidget::itemClicked, this, &func_image::showImage);
+
+// 设置初始状态栏文本
+    statusLabel->setText("当前文件名： 无");
 }
 
 func_image::~func_image()
