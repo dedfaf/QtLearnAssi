@@ -2,12 +2,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "func_music.h"
+#include "func_video.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    func_video *videoPlayer = new func_video(this);
+    ui->stackedWidget_func->widget(1)->deleteLater();
+    ui->stackedWidget_func->insertWidget(1, videoPlayer);
 
     // Default Stack
     ui->stackedWidget_func->setCurrentIndex(4);

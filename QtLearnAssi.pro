@@ -1,6 +1,8 @@
 QT += core gui multimedia
 QT += core gui widgets
 QT += multimedia multimediawidgets
+QT += core gui widgets multimedia multimediawidgets
+
 
 
 
@@ -21,17 +23,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     func_music.cpp \
+    func_video.cpp \
     main.cpp \
     mainwindow.cpp \
     timedisplay.cpp
 
 HEADERS += \
     func_music.h \
+    func_video.h \
     mainwindow.h \
     timedisplay.h
 
 FORMS += \
     func_music.ui \
+    func_video.ui \
     mainwindow.ui \
     timedisplay.ui
 
