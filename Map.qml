@@ -43,31 +43,10 @@ Item {
                     width: 14
                     height: 14
                     radius: 7
-                    color: "green"
-                    border.color: "red"
+                    color: "grey"
+                    border.color: "black"
                     border.width: 1
                 }
-            }
-
-            RouteModel {
-                id: routeModel
-                query: RouteQuery {
-                    id: routeQuery
-                    waypoints: [
-                        QtPositioning.coordinate(39.732787975440324, 116.17132228780731), // Start point
-                        QtPositioning.coordinate(39.90876960068592, 116.39754486606626) // End point
-                    ]
-//                    travelMode: RouteQuery.CarTravel
-                    travelModes: routeQuery.CarTravel
-                }
-            }
-
-            // Define the starting and ending coordinates
-            MapPolyline {
-                id: routeLine
-                line.width: 5
-                line.color: 'blue'
-                path: routeModel.routePath
             }
         }
     }
