@@ -6,9 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>600</height>
+    <width>1208</width>
+    <height>631</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Agency FB</family>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -29,13 +34,26 @@
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QLabel" name="label_MapSelect">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
           <property name="text">
            <string>Map Select</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::AutoText</enum>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QComboBox" name="comboBox_mapTypeSelection">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
           <property name="editable">
            <bool>false</bool>
           </property>
@@ -76,10 +94,146 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_refreshMapData">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+         </font>
+        </property>
         <property name="text">
          <string>Refresh Map</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLineEdit" name="lineEdit_locInput">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="placeholderText">
+           <string>Search Location Here</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_locSearch">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Search</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QListView" name="listView_locResult">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="pushButton_moveTo">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>moveTo</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_addMark">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>AddMark</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_targetCoor">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QLineEdit" name="lineEdit_fromLat">
+              <property name="text">
+               <string>37.78</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_fromLog">
+              <property name="text">
+               <string>-122.42</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="QLineEdit" name="lineEdit_toLat">
+              <property name="text">
+               <string>39.91</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_toLog">
+              <property name="text">
+               <string>-77.03</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_navi">
+            <property name="text">
+             <string>Navigate</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_showRes">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <spacer name="verticalSpacer">

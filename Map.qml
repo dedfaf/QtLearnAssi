@@ -28,12 +28,42 @@ Item {
             zoomLevel: 13.95
 
             function getMapType(index) {
-                return supportedMapTypes[index];
+                return supportedMapTypes[index]
             }
 
             function refreshMap() {
                 mapObject.clearData();
             }
+
+            function moveTo (la, lo) {
+                mapObject.center = QtPositioning.coordinate(la, lo)
+                console.log("moving cam to " + la + ", " + lo)
+            }
+
+//            MapQuickItem {
+//                id: marker
+//                coordinate: QtPositioning.coordinate(39.906217, 116.391276)
+//                anchorPoint: Qt.point(sourceItem.width/2,sourceItem.height/2)
+//                sourceItem: Rectangle{
+//                    width: 14
+//                    height: 14
+//                    radius: 7
+//                    color: "cyan"
+//                    border.color: "black"
+//                    border.width: 1
+//                }
+//            }
+
+            function addMarker(la, lo) {
+                console.log("adding marker to " + la + ", " + lo);
+
+                // Create a new marker item
+                var newMarker = Qt.createQmlObject('import QtQuick 2.12; import QtPositioning 5.12; import QtLocation 5.12; MapQuickItem { id: marker; coordinate: QtPositioning.coordinate(' + la + ', ' + lo + '); anchorPoint: Qt.point(sourceItem.width / 2, sourceItem.height / 2); sourceItem: Rectangle { width: 14; height: 14; radius: 7; color: "cyan"; border.color: "black"; border.width: 1; } }', mapObject);
+
+                // Add the new marker to the map
+                mapObject.addMapItem(newMarker);
+            }
+
 
             MapQuickItem {
                 id: selfLocation
@@ -43,31 +73,10 @@ Item {
                     width: 14
                     height: 14
                     radius: 7
-                    color: "green"
-                    border.color: "red"
+                    color: "grey"
+                    border.color: "black"
                     border.width: 1
                 }
-            }
-
-            RouteModel {
-                id: routeModel
-                query: RouteQuery {
-                    id: routeQuery
-                    waypoints: [
-                        QtPositioning.coordinate(39.732787975440324, 116.17132228780731), // Start point
-                        QtPositioning.coordinate(39.90876960068592, 116.39754486606626) // End point
-                    ]
-//                    travelMode: RouteQuery.CarTravel
-                    travelModes: routeQuery.CarTravel
-                }
-            }
-
-            // Define the starting and ending coordinates
-            MapPolyline {
-                id: routeLine
-                line.width: 5
-                line.color: 'blue'
-                path: routeModel.routePath
             }
         }
     }

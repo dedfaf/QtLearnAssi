@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QSslSocket>
+#include <QStringListModel>
+#include <QNetworkReply>
 
 namespace Ui {
 class func_map;
@@ -18,6 +20,17 @@ public:
 
 private:
     Ui::func_map *ui;
+    QStringList parseGeocodeJson(QByteArray jsonString);
+    void on_Reply_Finished(QNetworkReply *reply);
+    QList<QPair<double, double>> locResultData;
+    QNetworkAccessManager *networkManager;
+    QStringListModel* locResult_model = new QStringListModel();
+
+private slots:
+    void on_pushButton_locSearch_clicked();
+    void on_pushButton_moveTo_clicked();
+    void on_pushButton_addMark_clicked();
+    void on_pushButton_navi_clicked();
 };
 
 #endif // FUNC_MAP_H

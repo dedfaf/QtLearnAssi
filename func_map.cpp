@@ -2,18 +2,21 @@
 #include "ui_func_map.h"
 #include <QDir>
 #include <QtDebug>
-#include <QSslSocket>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <QQuickItem>
+#include <QItemSelectionModel>
 
 func_map::func_map(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::func_map)
+    ui(new Ui::func_map),
+    networkManager(new QNetworkAccessManager(this)),
+    locResult_model(new QStringListModel(this))
 {
     ui->setupUi(this);
-
-//    ui->quickWidget_mainMap->setResizeMode(QQuickWidget::SizeRootObjectToView);
-//    ui->quickWidget_mainMap->setAttribute(Qt::WA_AlwaysStackOnTop);
-//    ui->quickWidget_mainMap->setClearColor(Qt::transparent);
 
     QQuickItem *mapItem = ui->quickWidget_mainMap->rootObject();
 
@@ -37,9 +40,137 @@ func_map::func_map(QWidget *parent) :
         QMetaObject::invokeMethod(mapObject, "refreshMap");
     });
 
+    ui->listView_locResult->setModel(locResult_model);
+
+    // Connect the move to button
+    connect(ui->pushButton_moveTo, &QPushButton::clicked, this, &func_map::on_pushButton_moveTo_clicked);
 }
 
 func_map::~func_map()
 {
     delete ui;
+}
+
+QStringList func_map::parseGeocodeJson(QByteArray jsonString)
+{
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(jsonString);
+    QJsonObject jsonObj = jsonResponse.object();
+
+    QJsonArray featuresArray = jsonObj["features"].toArray();
+    QStringList list;
+    locResultData.clear(); // Clear previous data
+
+    qDebug() << "Parsing JSON response...";
+    qDebug() << featuresArray;
+
+    for (const QJsonValue &value : featuresArray) {
+        QJsonObject featureObj = value.toObject();
+        QJsonObject propertiesObj = featureObj["properties"].toObject();
+
+        QString address = propertiesObj["full_address"].toString();
+        QString name = propertiesObj["name_preferred"].toString();
+//        QString latitude = propertiesObj["lat"].toString();
+//        QString longitude = propertiesObj["lon"].toString();
+        QJsonObject coordinates = propertiesObj["coordinates"].toObject();
+        double latitude = coordinates["latitude"].toDouble();
+        double longitude = coordinates["longitude"].toDouble();
+
+        qDebug() << featureObj;
+
+        list << name;
+        locResultData.append(QPair<double, double>(latitude, longitude)); // Store latitude and longitude
+    }
+
+    qDebug() << list;
+    qDebug() << locResultData;
+    return list;
+}
+
+void func_map::on_pushButton_locSearch_clicked()
+{
+    qDebug() << "Search button clicked";
+
+    QString query = ui->lineEdit_locInput->text();
+    QString accessToken = "sk.eyJ1Ijoid2lreW1vdXIiLCJhIjoiY20wYnphcmEwMGQ2aTJqcHYwdm9zZWkxbCJ9.Z-CC2Z24SDiILAogSPwssA";
+    QUrl url("https://api.mapbox.com/search/geocode/v6/forward?q=" + query + "&country=CN&access_token=" + accessToken);
+
+    qDebug() << "Request URL:" << url;
+
+    QNetworkRequest request(url);
+    QNetworkReply *reply = networkManager->get(request);
+
+    connect(reply, &QNetworkReply::finished, [this, reply]() {
+        qDebug() << "Reply finished";
+        on_Reply_Finished(reply);
+    });
+}
+
+void func_map::on_pushButton_moveTo_clicked()
+{
+    QQuickItem *mapItem = ui->quickWidget_mainMap->rootObject();
+    QObject *mapObject = mapItem->findChild<QQuickItem*>("mapObject");
+
+    QItemSelectionModel *selectionModel = ui->listView_locResult->selectionModel();
+    QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+
+    int currentRow;
+
+    foreach (const QModelIndex &index, selectedIndexes) {
+        currentRow = index.row();
+        qDebug() << "Selected row:" << currentRow ;
+    }
+
+    if (!selectedIndexes.isEmpty()) {
+        double latitude = locResultData[currentRow].first;
+        double longitude = locResultData[currentRow].second;
+        qDebug() << "Latitude:" << latitude;
+        qDebug() << "Longitude:" << longitude;
+//        QVariantList coordinate;
+//        coordinate << locResultData[currentRow].first << locResultData[currentRow].second;
+
+        QMetaObject::invokeMethod(mapObject, "moveTo", Q_ARG(QVariant, latitude), Q_ARG(QVariant, longitude));
+        ui->label_targetCoor->setText("Moving cam to: " + QString::number(latitude) + ", " + QString::number(longitude));
+    } else {
+        qDebug() << "No item is selected.";
+    }
+}
+
+void func_map::on_pushButton_addMark_clicked()
+{
+    QQuickItem *mapItem = ui->quickWidget_mainMap->rootObject();
+    QObject *mapObject = mapItem->findChild<QQuickItem*>("mapObject");
+
+    QItemSelectionModel *selectionModel = ui->listView_locResult->selectionModel();
+    QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+
+    int currentRow;
+
+    foreach (const QModelIndex &index, selectedIndexes) {
+        currentRow = index.row();
+        qDebug() << "Selected row:" << currentRow ;
+    }
+
+    if (!selectedIndexes.isEmpty()) {
+//        QVariantList coordinate;
+//        coordinate << locResultData[currentRow].first << locResultData[currentRow].second;
+
+        QMetaObject::invokeMethod(mapObject, "addMarker", Q_ARG(QVariant, locResultData[currentRow].first), Q_ARG(QVariant, locResultData[currentRow].second));
+    } else {
+        qDebug() << "No item is selected.";
+    }
+}
+
+void func_map::on_pushButton_navi_clicked()
+{
+    ui->label_showRes->setText(R"({"routes":[{"geometry":"a|qeF~cejVysgH}itImoz@_ayGs|{BshcDvhVk_`D_rcBowxBgdvA_afIvsAobkCxo`A_d`BjzAk}lNk}eByixAshhBslmUvtEkmiDdq_C}|~FeoEk|eYjmv@yh}EylhAosxVtdSsbdM{a_Ay_vKnldB}zrWdbCipr[rmn@mn~KljgE{}nJlmDm}mDdlgCwn|C","legs":[{"steps":[],"summary":"","weight":1201927.8,"duration":1616150.2,"distance":4779750.5}],"weight_name":"cyclability","weight":1201927.8,"duration":1616150.2,"distance":4779750.5}],"waypoints":[{"distance":0.5618988862661555,"name":"","location":[-122.420001,37.780005]},{"distance":11.715505714931716,"name":"Logan Circle Northwest","location":[-77.030091,38.910078]}],"code":"Ok","uuid":"elm9WIfETwmrwFQasVbROqx4G-GzuhQ02jGrN2KxtfmjEbukAf3ZFA=="})");
+}
+
+void func_map::on_Reply_Finished(QNetworkReply *reply)
+{
+    QByteArray replyJson = reply->readAll();
+    qInfo() << "Reply received:" << replyJson;
+
+    locResult_model->setStringList(parseGeocodeJson(replyJson));
+
+    reply->deleteLater();
 }
