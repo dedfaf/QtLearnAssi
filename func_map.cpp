@@ -121,12 +121,15 @@ void func_map::on_pushButton_moveTo_clicked()
     }
 
     if (!selectedIndexes.isEmpty()) {
-        qDebug() << "Latitude:" << locResultData[currentRow].first;
-        qDebug() << "Longitude:" << locResultData[currentRow].second;
+        double latitude = locResultData[currentRow].first;
+        double longitude = locResultData[currentRow].second;
+        qDebug() << "Latitude:" << latitude;
+        qDebug() << "Longitude:" << longitude;
 //        QVariantList coordinate;
 //        coordinate << locResultData[currentRow].first << locResultData[currentRow].second;
 
-        QMetaObject::invokeMethod(mapObject, "moveTo", Q_ARG(QVariant, locResultData[currentRow].first), Q_ARG(QVariant, locResultData[currentRow].second));
+        QMetaObject::invokeMethod(mapObject, "moveTo", Q_ARG(QVariant, latitude), Q_ARG(QVariant, longitude));
+        ui->label_targetCoor->setText("Moving cam to: " + QString::number(latitude) + ", " + QString::number(longitude));
     } else {
         qDebug() << "No item is selected.";
     }
@@ -155,6 +158,11 @@ void func_map::on_pushButton_addMark_clicked()
     } else {
         qDebug() << "No item is selected.";
     }
+}
+
+void func_map::on_pushButton_navi_clicked()
+{
+    ui->label_showRes->setText(R"({"routes":[{"geometry":"a|qeF~cejVysgH}itImoz@_ayGs|{BshcDvhVk_`D_rcBowxBgdvA_afIvsAobkCxo`A_d`BjzAk}lNk}eByixAshhBslmUvtEkmiDdq_C}|~FeoEk|eYjmv@yh}EylhAosxVtdSsbdM{a_Ay_vKnldB}zrWdbCipr[rmn@mn~KljgE{}nJlmDm}mDdlgCwn|C","legs":[{"steps":[],"summary":"","weight":1201927.8,"duration":1616150.2,"distance":4779750.5}],"weight_name":"cyclability","weight":1201927.8,"duration":1616150.2,"distance":4779750.5}],"waypoints":[{"distance":0.5618988862661555,"name":"","location":[-122.420001,37.780005]},{"distance":11.715505714931716,"name":"Logan Circle Northwest","location":[-77.030091,38.910078]}],"code":"Ok","uuid":"elm9WIfETwmrwFQasVbROqx4G-GzuhQ02jGrN2KxtfmjEbukAf3ZFA=="})");
 }
 
 void func_map::on_Reply_Finished(QNetworkReply *reply)

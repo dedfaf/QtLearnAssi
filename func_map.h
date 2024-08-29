@@ -30,6 +30,7 @@ private slots:
     void on_pushButton_locSearch_clicked();
     void on_pushButton_moveTo_clicked();
     void on_pushButton_addMark_clicked();
+    void on_pushButton_navi_clicked();
 };
 
 #endif // FUNC_MAP_H
