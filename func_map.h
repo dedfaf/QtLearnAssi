@@ -21,7 +21,8 @@ public:
 private:
     Ui::func_map *ui;
     QStringList parseGeocodeJson(QByteArray jsonString);
-    void on_Reply_Finished(QNetworkReply *reply);
+    void on_Search_Reply_Finished(QNetworkReply *reply);
+    void on_Navi_Reply_Finished(QNetworkReply *reply);
     QList<QPair<double, double>> locResultData;
     QNetworkAccessManager *networkManager;
     QStringListModel* locResult_model = new QStringListModel();
