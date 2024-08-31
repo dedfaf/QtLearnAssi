@@ -14,7 +14,8 @@ func_map::func_map(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::func_map),
     networkManager(new QNetworkAccessManager(this)),
-    locResult_model(new QStringListModel(this))
+    locResult_model(new QStringListModel(this)),
+    naviResult_model(new QStringListModel(this))
 {
     ui->setupUi(this);
 
@@ -41,6 +42,7 @@ func_map::func_map(QWidget *parent) :
     });
 
     ui->listView_locResult->setModel(locResult_model);
+    ui->listView_naviResult->setModel(naviResult_model);
 
     // Connect the move to button
     connect(ui->pushButton_moveTo, &QPushButton::clicked, this, &func_map::on_pushButton_moveTo_clicked);
@@ -227,7 +229,8 @@ void func_map::on_Navi_Reply_Finished(QNetworkReply *reply)
 //    ui->label_showRes->setText(reply->readAll());
 
     QByteArray replyJson = reply->readAll();
-    parseNaviJson(replyJson);
+
+    naviResult_model->setStringList(parseNaviJson(replyJson));
 
     reply->deleteLater();
 }

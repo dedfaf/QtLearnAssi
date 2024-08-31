@@ -27,6 +27,7 @@ private:
     QList<QPair<double, double>> locResultData;
     QNetworkAccessManager *networkManager;
     QStringListModel* locResult_model = new QStringListModel();
+    QStringListModel* naviResult_model = new QStringListModel();
 
 private slots:
     void on_pushButton_locSearch_clicked();
