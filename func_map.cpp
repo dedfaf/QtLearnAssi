@@ -14,7 +14,8 @@ func_map::func_map(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::func_map),
     networkManager(new QNetworkAccessManager(this)),
-    locResult_model(new QStringListModel(this))
+    locResult_model(new QStringListModel(this)),
+    naviResult_model(new QStringListModel(this))
 {
     ui->setupUi(this);
 
@@ -41,6 +42,7 @@ func_map::func_map(QWidget *parent) :
     });
 
     ui->listView_locResult->setModel(locResult_model);
+    ui->listView_naviResult->setModel(naviResult_model);
 
     // Connect the move to button
     connect(ui->pushButton_moveTo, &QPushButton::clicked, this, &func_map::on_pushButton_moveTo_clicked);
@@ -101,7 +103,7 @@ void func_map::on_pushButton_locSearch_clicked()
 
     connect(reply, &QNetworkReply::finished, [this, reply]() {
         qDebug() << "Reply finished";
-        on_Reply_Finished(reply);
+        on_Search_Reply_Finished(reply);
     });
 }
 
@@ -160,17 +162,75 @@ void func_map::on_pushButton_addMark_clicked()
     }
 }
 
-void func_map::on_pushButton_navi_clicked()
+QStringList func_map::parseNaviJson(QByteArray jsonString)
 {
-    ui->label_showRes->setText(R"({"routes":[{"geometry":"a|qeF~cejVysgH}itImoz@_ayGs|{BshcDvhVk_`D_rcBowxBgdvA_afIvsAobkCxo`A_d`BjzAk}lNk}eByixAshhBslmUvtEkmiDdq_C}|~FeoEk|eYjmv@yh}EylhAosxVtdSsbdM{a_Ay_vKnldB}zrWdbCipr[rmn@mn~KljgE{}nJlmDm}mDdlgCwn|C","legs":[{"steps":[],"summary":"","weight":1201927.8,"duration":1616150.2,"distance":4779750.5}],"weight_name":"cyclability","weight":1201927.8,"duration":1616150.2,"distance":4779750.5}],"waypoints":[{"distance":0.5618988862661555,"name":"","location":[-122.420001,37.780005]},{"distance":11.715505714931716,"name":"Logan Circle Northwest","location":[-77.030091,38.910078]}],"code":"Ok","uuid":"elm9WIfETwmrwFQasVbROqx4G-GzuhQ02jGrN2KxtfmjEbukAf3ZFA=="})");
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(jsonString);
+    QJsonObject jsonObj = jsonResponse.object();
+
+    QStringList list;
+    QJsonArray routes = jsonObj["routes"].toArray();
+
+    QJsonObject firstRoute = routes[0].toObject();
+    QJsonArray legs = firstRoute["legs"].toArray();
+
+    QJsonObject firstLeg = legs[0].toObject();
+    QJsonArray notifications = firstLeg["notifications"].toArray();
+
+    for (const QJsonValue &notificationValue : notifications) {
+        QJsonObject notification = notificationValue.toObject();
+        QJsonObject detailsObj = notification["details"].toObject();
+        list << detailsObj["message"].toString();
+    }
+
+    qDebug() << "routes: " << routes;
+    qDebug() << "legs: " << legs;
+    qDebug() << "list: " << list;
+
+    return list;
 }
 
-void func_map::on_Reply_Finished(QNetworkReply *reply)
+void func_map::on_pushButton_navi_clicked()
+{
+    qDebug() << "Navi button clicked";
+
+    QString query = ui->lineEdit_locInput->text();
+
+    QString  lat_from = ui->lineEdit_fromLat->text(),
+            log_from = ui->lineEdit_fromLog->text(),
+            lat_to = ui->lineEdit_toLat->text(),
+            log_to = ui->lineEdit_toLog->text();
+
+    QString accessToken = "sk.eyJ1Ijoid2lreW1vdXIiLCJhIjoiY20wYnphcmEwMGQ2aTJqcHYwdm9zZWkxbCJ9.Z-CC2Z24SDiILAogSPwssA";
+    QUrl url("https://api.mapbox.com/directions/v5/mapbox/driving/" + log_from + "," + lat_from + ";" + log_to + "," + lat_to + "?access_token=" + accessToken);
+
+    qDebug() << "Request URL:" << url;
+
+    QNetworkRequest request(url);
+    QNetworkReply *reply = networkManager->get(request);
+
+    connect(reply, &QNetworkReply::finished, [this, reply]() {
+        qDebug() << "Reply finished";
+        on_Navi_Reply_Finished(reply);
+    });
+}
+
+void func_map::on_Search_Reply_Finished(QNetworkReply *reply)
 {
     QByteArray replyJson = reply->readAll();
-    qInfo() << "Reply received:" << replyJson;
+//    qInfo() << "Reply received:" << replyJson;
 
     locResult_model->setStringList(parseGeocodeJson(replyJson));
+
+    reply->deleteLater();
+}
+
+void func_map::on_Navi_Reply_Finished(QNetworkReply *reply)
+{
+//    ui->label_showRes->setText(reply->readAll());
+
+    QByteArray replyJson = reply->readAll();
+
+    naviResult_model->setStringList(parseNaviJson(replyJson));
 
     reply->deleteLater();
 }
